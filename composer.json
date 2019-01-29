@@ -1,0 +1,22 @@
+{
+  "name": "mrself/options",
+  "autoload": {
+    "psr-4": {
+      "Mrself\\Options\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mrself\\Options\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "symfony/options-resolver": "^4.2",
+    "mrself/util": "v1.2.1",
+    "doctrine/annotations": "^1.6",
+    "php-di/phpdoc-reader": "^2.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.5"
+  }
+}
