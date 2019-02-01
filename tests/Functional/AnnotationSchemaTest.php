@@ -96,4 +96,19 @@ class AnnotationSchemaTest extends TestCase
         $object->init(['option1' => $reflection]);
         $this->assertEquals($reflection, $object->option1);
     }
+
+    public function testPropertyDefaultValueIsUsed()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option
+             * @var string
+             */
+            public $option1 = 'str';
+        };
+        $object->init();
+        $this->assertEquals('str', $object->option1);
+    }
 }

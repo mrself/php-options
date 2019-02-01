@@ -14,6 +14,11 @@ class PropertyMeta
      */
     protected $type;
 
+    /**
+     * @var \ReflectionProperty
+     */
+    protected $reflection;
+
     public static function make(array $options): self
     {
         $self = new static();
@@ -37,5 +42,13 @@ class PropertyMeta
     public function getType(): ?string
     {
         return $this->type;
+    }
+
+    /**
+     * @return \ReflectionProperty
+     */
+    public function getReflection(): \ReflectionProperty
+    {
+        return $this->reflection;
     }
 }
