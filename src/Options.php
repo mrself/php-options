@@ -158,6 +158,9 @@ class Options
             if (array_key_exists($name, $this->preOptions)) {
                 continue;
             }
+            if ($this->isPrimitiveType($type)) {
+                continue;
+            }
             $this->preOptions[$name] = $this->getDependency($type);
         }
     }
@@ -182,5 +185,19 @@ class Options
         foreach ($this->schema['normalizers'] as $name => $normalizer) {
             $this->resolved[$name] = $normalizer($this->resolved[$name], $this->resolved);
         }
+    }
+
+    protected function isPrimitiveType(string $typeName)
+    {
+        return in_array($typeName, [
+            'int',
+            'integer',
+            'bool',
+            'boolean',
+            'float',
+            'string',
+            'array',
+            'double'
+        ]);
     }
 }

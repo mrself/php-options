@@ -111,4 +111,31 @@ class AnnotationSchemaTest extends TestCase
         $object->init();
         $this->assertEquals('str', $object->option1);
     }
+
+    /**
+     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
+     */
+    public function testItDoNotRetrieveOptionOfPrimitiveTypeFromContainerIfSchemaExists()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option
+             * @var string
+             */
+            public $option1;
+
+            public function getOptionsSchema()
+            {
+                return [
+                    'allowedTypes' => [
+                        'option1' => 'int'
+                    ]
+                ];
+            }
+        };
+        $object->init();
+        $this->assertEquals('str', $object->option1);
+    }
 }
