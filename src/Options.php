@@ -53,6 +53,7 @@ class Options
         }
         $this->fillDependencies();
         $this->resolved = $this->optionsResolver->resolve($this->preOptions);
+        $this->normalize();
     }
 
     public static function make(array $params)
@@ -71,7 +72,6 @@ class Options
 
     public function getForOwner(): array
     {
-        $this->normalize();
         return $this->resolved;
     }
 
@@ -94,11 +94,6 @@ class Options
     protected function getSchema()
     {
         return [];
-    }
-
-    public function getResolved()
-    {
-        return $this->resolved;
     }
 
     public function setParentProps(array $properties, $owner)

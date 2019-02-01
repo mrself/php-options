@@ -20,7 +20,7 @@ class WithOptionsTest extends TestCase
 
             public function _getOptions()
             {
-                return $this->options->getResolved();
+                return $this->options->getForOwner();
             }
         };
         $object->init(['option1' => 'value1']);
