@@ -3,9 +3,6 @@
 namespace Mrself\Options\Tests;
 
 use Mrself\Options\Annotation\Option;
-use Mrself\Options\Dependencies;
-use Mrself\Options\DependencyContainerInterface;
-use Mrself\Options\Options;
 use Mrself\Options\Tests\Functional\DependencyContainerTrait;
 use Mrself\Options\WithOptionsTrait;
 use Mrself\Options\WithOptionsTrait1;

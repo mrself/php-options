@@ -3,7 +3,6 @@
 namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Annotation\Option;
-use Mrself\Options\Options;
 use Mrself\Options\WithOptionsTrait;
 use PHPUnit\Framework\TestCase;
 
