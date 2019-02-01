@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d96dad7c1f6c520107591bee3cb518fb",
+    "content-hash": "f378b02cc3c1bd3cb185919c9db29fe5",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -130,16 +130,16 @@
         },
         {
             "name": "mrself/util",
-            "version": "v1.2.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrself/php-util.git",
-                "reference": "4e0083da4508ba1db9fb5512b5b28c0f5af1cb9c"
+                "reference": "451ee1b6f863726c085df4a098cde354fd98a436"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrself/php-util/zipball/4e0083da4508ba1db9fb5512b5b28c0f5af1cb9c",
-                "reference": "4e0083da4508ba1db9fb5512b5b28c0f5af1cb9c",
+                "url": "https://api.github.com/repos/mrself/php-util/zipball/451ee1b6f863726c085df4a098cde354fd98a436",
+                "reference": "451ee1b6f863726c085df4a098cde354fd98a436",
                 "shasum": ""
             },
             "require-dev": {
@@ -152,7 +152,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-01-28T17:39:46+00:00"
+            "time": "2019-02-01T18:06:07+00:00"
         },
         {
             "name": "php-di/phpdoc-reader",
