@@ -147,7 +147,7 @@ class Options
                 $this->schema['allowedTypes'][$name] = $type;
             }
             $defaultValue = $metaDef->getReflection()->getValue($this->owner);
-            if ($defaultValue) {
+            if (!is_null($defaultValue)) {
                 $this->schema['defaults'][$name] = $defaultValue;
             }
         }
