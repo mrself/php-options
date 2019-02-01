@@ -146,9 +146,8 @@ class Options
             if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
                 $this->schema['allowedTypes'][$name] = $type;
             }
-            $defaultValue = $metaDef->getReflection()->getValue($this->owner);
-            if (!is_null($defaultValue)) {
-                $this->schema['defaults'][$name] = $defaultValue;
+            if (!is_null($this->properties[$name])) {
+                $this->schema['defaults'][$name] = $this->properties[$name];
             }
         }
     }
