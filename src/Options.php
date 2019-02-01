@@ -2,12 +2,8 @@
 
 namespace Mrself\Options;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Mrself\Options\Annotation\Option;
-use Mrself\Options\Annotation\Options\Dependency;
 use Mrself\Util\MiscUtil;
-use PhpDocReader\PhpDocReader;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Options
@@ -55,9 +51,6 @@ class Options
         foreach ($this->schema['allowedTypes'] as $name => $types) {
             $this->optionsResolver->setAllowedTypes($name, $types);
         }
-//        foreach ($this->schema['normalizers'] as $name => $normalizer) {
-//            $this->optionsResolver->setNormalizer($name, $normalizer);
-//        }
         $this->fillDependencies();
         $this->resolved = $this->optionsResolver->resolve($this->preOptions);
     }
@@ -80,19 +73,14 @@ class Options
     {
         $this->normalize();
         return $this->resolved;
-        if ($this->schema['omitForOwner'] === true) {
-            return [];
-        }
-        $toOmit = array_filter($this->optionsMeta, function (PropertyMeta $metaDef) {
-            /** @var Option $annotation */
-            $annotation = $metaDef->getAnnotation(Option::class);
-            return !$annotation->forOwner;
-        });
-        $toOmit = array_merge(array_keys($toOmit), $this->schema['omitForOwner']);
-        $toLeave = array_diff(array_keys($this->resolved), $toOmit, $this->schema['locals']);
-        return $this->only($toLeave);
     }
 
+    /**
+     * @param array $onlyKeys
+     * @return array
+     * @throws MiscUtil\AbsentKeyException
+     * @throws MiscUtil\InvalidSourceException
+     */
     public function only(array $onlyKeys): array
     {
         return MiscUtil::only($this->resolved, $onlyKeys);
@@ -137,9 +125,6 @@ class Options
 
     /**
      * @todo add support for multiple types like \Class1|\Class2
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \PhpDocReader\AnnotationException
-     * @throws \ReflectionException
      */
     protected function addAnnotationOptionsSchema()
     {
