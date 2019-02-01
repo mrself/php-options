@@ -24,7 +24,7 @@ class GetForOwnerTest extends TestCase
              */
             public $option1;
         };
-        $object->run();
+        $object->init();
         $this->assertEquals($container->services['Reflection'], $object->option1);
     }
 }

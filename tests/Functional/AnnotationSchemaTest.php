@@ -25,7 +25,7 @@ class AnnotationSchemaTest extends TestCase
             public $option1;
         };
         $reflection = new \Reflection();
-        $object->run(['option1' => $reflection]);
+        $object->init(['option1' => $reflection]);
         $this->assertEquals($reflection, $object->option1);
     }
 
@@ -43,7 +43,7 @@ class AnnotationSchemaTest extends TestCase
              */
             public $option1;
         };
-        $object->run(['option1' => 1]);
+        $object->init(['option1' => 1]);
     }
 
     public function testTypeIsNotReadIfItIsPrimitive()
@@ -57,7 +57,7 @@ class AnnotationSchemaTest extends TestCase
              */
             public $option1;
         };
-        $object->run(['option1' => 1]);
+        $object->init(['option1' => 1]);
         $this->assertEquals(1, $object->option1);
     }
 
@@ -72,7 +72,7 @@ class AnnotationSchemaTest extends TestCase
              */
             public $option1;
         };
-        $object->run(['option1' => 1]);
+        $object->init(['option1' => 1]);
         $this->assertEquals(1, $object->option1);
     }
 
@@ -95,7 +95,7 @@ class AnnotationSchemaTest extends TestCase
             }
         };
         $reflection = new \Reflection();
-        $object->run(['option1' => $reflection]);
+        $object->init(['option1' => $reflection]);
         $this->assertEquals($reflection, $object->option1);
     }
 }

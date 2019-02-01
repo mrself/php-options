@@ -30,7 +30,7 @@ class DependenciesTest extends TestCase
              */
             public $option1;
         };
-        $object->run();
+        $object->init();
         $this->assertEquals($dateTime, $object->option1);
     }
 
@@ -49,7 +49,7 @@ class DependenciesTest extends TestCase
             public $option1;
         };
         $object->setPreOptions(['option1' => $dateTime]);
-        $object->run();
+        $object->init();
         $this->assertEquals($dateTime, $object->option1);
     }
 
@@ -66,7 +66,7 @@ class DependenciesTest extends TestCase
              */
             public $option1;
         };
-        $object->run();
+        $object->init();
         $this->assertEquals('value1', $object->option1);
     }
 }

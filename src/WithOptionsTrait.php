@@ -19,19 +19,13 @@ trait WithOptionsTrait
     public static function make(array $options = []): self
     {
         $self = new static();
-        return $self->run($options);
+        return $self->init($options);
     }
 
-    public function run(array $options = [])
-    {
-        $this->resolveOptions($options);
-        $this->init();
-        return $this;
-    }
-
-	public function init()
+	public function init(array $options = [])
 	{
-
+        $this->resolveOptions($options);
+        return $this;
     }
 
     public function setPreOptions(array $options = [])

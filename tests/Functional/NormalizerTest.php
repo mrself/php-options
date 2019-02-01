@@ -30,7 +30,7 @@ class NormalizerTest extends TestCase
                 ];
             }
         };
-        $object->run([
+        $object->init([
             'option1' => 'value1',
             'option2' => 'value2',
         ]);

@@ -23,7 +23,7 @@ class WithOptionsTest extends TestCase
                 return $this->options->getResolved();
             }
         };
-        $object->run(['option1' => 'value1']);
+        $object->init(['option1' => 'value1']);
         $this->assertEquals(['option1' => 'value1'], $object->_getOptions());
     }
 }
