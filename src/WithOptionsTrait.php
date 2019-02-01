@@ -40,6 +40,11 @@ trait WithOptionsTrait
         foreach ($this->options->getForOwner() as $name => $value) {
             $this->$name = $value;
         }
+        $this->onOptionsResolve();
+    }
+
+    protected function onOptionsResolve()
+    {
     }
 
     protected function getOptionsSchema()
