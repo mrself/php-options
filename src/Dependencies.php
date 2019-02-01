@@ -19,13 +19,32 @@ class Dependencies
         return static::$containers[$containerKey]->getParameter($dependencyName);
     }
 
-    public static function addContainer(DependencyContainerInterface $container, string $key)
+    /**
+     * @param $container
+     * @param string $key
+     * @throws InvalidContainerException
+     */
+    public static function addContainer($container, string $key)
     {
+        if (!static::isContainerValid($container)) {
+            throw new InvalidContainerException($container);
+        }
         static::$containers[$key] = $container;
     }
 
     public static function clearContainers()
     {
         static::$containers = [];
+    }
+
+    protected static function isContainerValid($container)
+    {
+        $methods = ['has', 'get', 'getParameter'];
+        foreach ($methods as $method) {
+            if (!method_exists($container, $method)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
