@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e31d5ece9b870f2ae5aa7bc725562da9",
+    "content-hash": "1d2e53ae1260494377f06cc0ddc93e75",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -160,20 +160,21 @@
         },
         {
             "name": "mrself/util",
-            "version": "v1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrself/php-util.git",
-                "reference": "a3dc0d59ebc3845b9ad431c0ce9c49f9a896bc60"
+                "reference": "6c41dd632c6de0e1239dbd37a61d5e306448f231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrself/php-util/zipball/a3dc0d59ebc3845b9ad431c0ce9c49f9a896bc60",
-                "reference": "a3dc0d59ebc3845b9ad431c0ce9c49f9a896bc60",
+                "url": "https://api.github.com/repos/mrself/php-util/zipball/6c41dd632c6de0e1239dbd37a61d5e306448f231",
+                "reference": "6c41dd632c6de0e1239dbd37a61d5e306448f231",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*"
+                "ext-json": "*",
+                "php": "^7.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7.5"
@@ -185,7 +186,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-02-02T12:29:59+00:00"
+            "time": "2019-02-02T16:47:24+00:00"
         },
         {
             "name": "php-di/phpdoc-reader",
