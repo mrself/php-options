@@ -177,6 +177,9 @@ class Options
         return $this->getContainer()->get($type);
     }
 
+    /**
+     * @return string|string[]
+     */
     protected function getContainerNamespace()
     {
         if ($this->containerNamespace) {
@@ -184,8 +187,7 @@ class Options
         }
         $ownerClass = get_class($this->owner);
         $parts = explode('\\', $ownerClass);
-        $neededParts = array_slice($parts, 0, 2);
-        return implode('\\', $neededParts);
+        return array_slice($parts, 0, 2);
     }
 
     protected function getParameter(string $name)
@@ -196,7 +198,14 @@ class Options
     public function getContainer()
     {
         $namespace = $this->getContainerNamespace();
-        $container = ContainerRegistry::get($namespace, '');
+        if (is_string($namespace)) {
+            $namespace = explode('\\', $namespace);
+        }
+        $container = ContainerRegistry::get(implode('\\', $namespace), '');
+        if ('' === $container) {
+            $namespace[0];
+            $container = ContainerRegistry::get($namespace[0], '');
+        }
         $class = get_class($this->owner);
         if ('' === $container) {
             throw new UndefinedContainerException($namespace, $class);

@@ -2,6 +2,7 @@
 
 namespace Mrself\Options\Tests;
 
+use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
 use Mrself\Options\Tests\Functional\DependencyContainerTrait;
 use Mrself\Options\UndefinedContainerException;
@@ -96,5 +97,28 @@ class DependenciesTest extends TestCase
         };
         $object->init();
         $this->assertEquals('value1', $object->option1);
+    }
+
+    public function testContainerNamespaceCanBeOnePart()
+    {
+        $container = $this->getDependencyContainer();
+        ContainerRegistry::reset();
+        ContainerRegistry::add('Mrself', $container);
+        $dateTime = new \DateTime();
+        $container->services['DateTime'] = $dateTime;
+
+        $object = new class {
+            use WithOptionsTrait;
+
+            protected $optionsContainerNamespace = 'Mrself\\Options';
+
+            /**
+             * @Option
+             * @var \DateTime
+             */
+            public $option1;
+        };
+        $object->init();
+        $this->assertEquals($dateTime, $object->option1);
     }
 }

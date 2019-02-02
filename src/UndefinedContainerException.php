@@ -14,8 +14,9 @@ class UndefinedContainerException extends OptionsException
      */
     protected $ownerClass;
 
-    public function __construct(string $namespace, string $ownerClass)
+    public function __construct(array $namespace, string $ownerClass)
     {
+        $namespace = implode('\\', $namespace);
         $this->namespace = $namespace;
         $this->ownerClass = $ownerClass;
 
