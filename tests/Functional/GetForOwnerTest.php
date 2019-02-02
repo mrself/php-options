@@ -17,6 +17,8 @@ class GetForOwnerTest extends TestCase
         $object = new class {
             use WithOptionsTrait;
 
+            protected $optionsContainerNamespace = 'Mrself\\Options';
+
             /**
              * @Option
              * @var \Reflection

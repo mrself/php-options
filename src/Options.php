@@ -2,6 +2,7 @@
 
 namespace Mrself\Options;
 
+use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
 use Mrself\Util\MiscUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,6 +38,11 @@ class Options
 
     protected $owner;
 
+    /**
+     * @var string
+     */
+    protected $containerNamespace;
+
     public function resolve(array $options = [])
     {
         $this->init();
@@ -63,6 +69,7 @@ class Options
         $self->owner = $params['owner'];
         $self->schema = $params['schema'];
         $self->preOptions = $params['preOptions'] ?: [];
+        $self->containerNamespace = $params['containerNamespace'];
         return $self;
     }
 
@@ -167,12 +174,34 @@ class Options
 
     protected function getDependency(string $type)
     {
-        return Dependencies::get($this->getDependencyContainerKey(), $type);
+        return $this->getContainer()->get($type);
+    }
+
+    protected function getContainerNamespace()
+    {
+        if ($this->containerNamespace) {
+            return $this->containerNamespace;
+        }
+        $ownerClass = get_class($this->owner);
+        $parts = explode('\\', $ownerClass);
+        $neededParts = array_slice($parts, 0, 2);
+        return implode('\\', $neededParts);
     }
 
     protected function getParameter(string $name)
     {
-        return Dependencies::getParameter($this->getDependencyContainerKey(), $name);
+        return $this->getContainer()->getParameter($name);
+    }
+
+    public function getContainer()
+    {
+        $namespace = $this->getContainerNamespace();
+        $container = ContainerRegistry::get($namespace, '');
+        $class = get_class($this->owner);
+        if ('' === $container) {
+            throw new UndefinedContainerException($namespace, $class);
+        }
+        return $container;
     }
 
     protected function getDependencyContainerKey()

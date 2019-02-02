@@ -4,8 +4,8 @@ namespace Mrself\Options\Tests;
 
 use Mrself\Options\Annotation\Option;
 use Mrself\Options\Tests\Functional\DependencyContainerTrait;
+use Mrself\Options\UndefinedContainerException;
 use Mrself\Options\WithOptionsTrait;
-use Mrself\Options\WithOptionsTrait1;
 use PHPUnit\Framework\TestCase;
 
 class DependenciesTest extends TestCase
@@ -21,6 +21,8 @@ class DependenciesTest extends TestCase
         $object = new class {
             use WithOptionsTrait;
 
+            protected $optionsContainerNamespace = 'Mrself\\Options';
+
             /**
              * @Option
              * @var \DateTime
@@ -29,6 +31,33 @@ class DependenciesTest extends TestCase
         };
         $object->init();
         $this->assertEquals($dateTime, $object->option1);
+    }
+
+    public function testExceptionIsThrownIfContainerIsAbsent()
+    {
+        $container = $this->getDependencyContainer();
+        $dateTime = new \DateTime();
+        $container->services['DateTime'] = $dateTime;
+
+        $object = new class {
+            use WithOptionsTrait;
+
+            protected $optionsContainerNamespace = 'Mrself\\Options1';
+
+            /**
+             * @Option
+             * @var \DateTime
+             */
+            public $option1;
+        };
+        try {
+            $object->init();
+        } catch (UndefinedContainerException $e) {
+            $this->assertEquals('Mrself\\Options1', $e->getNamespace());
+            $this->assertContains('class@anonymous', $e->getOwnerClass());
+            return;
+        }
+        $this->assertTrue(false);
     }
 
     public function testOptionIsNotRetrievedFromContainerIfItPresentsAlready()
@@ -56,6 +85,8 @@ class DependenciesTest extends TestCase
         $container->parameters['param1'] = 'value1';
         $object = new class  {
             use WithOptionsTrait;
+
+            protected $optionsContainerNamespace = 'Mrself\\Options';
 
             /**
              * @Option(parameter="param1")

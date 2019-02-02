@@ -2,14 +2,15 @@
 
 namespace Mrself\Options\Tests\Functional;
 
-use Mrself\Options\Dependencies;
-use Mrself\Options\DependencyContainerInterface;
+use Mrself\Container\ContainerInterface;
+use Mrself\Container\Registry\ContainerRegistry;
 
 trait DependencyContainerTrait
 {
     protected function getDependencyContainer()
     {
-        $container = new class implements DependencyContainerInterface {
+        ContainerRegistry::reset();
+        $container = new class implements ContainerInterface {
             public $services = [];
             public $parameters = [];
 
@@ -28,7 +29,7 @@ trait DependencyContainerTrait
                 return $this->parameters[$name];
             }
         };
-        Dependencies::addContainer($container, 'app');
+        ContainerRegistry::add('Mrself\\Options', $container);
         return $container;
     }
 }

@@ -64,8 +64,17 @@ trait WithOptionsTrait
             'properties' => get_object_vars($this),
             'owner' => $this,
             'schema' => $this->getOptionsSchema(),
-            'preOptions' => $this->preOptions
+            'preOptions' => $this->preOptions,
+            'containerNamespace' => $this->getOptionsContainerNamespace()
         ]);
+    }
+
+    public function getOptionsContainerNamespace(): string
+    {
+        if (property_exists($this, 'optionsContainerNamespace')) {
+            return $this->optionsContainerNamespace;
+        }
+        return '';
     }
 
     protected function getOptionsClass()
