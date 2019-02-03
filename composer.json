@@ -15,7 +15,7 @@
     "mrself/util": "1.5.0",
     "doctrine/annotations": "^1.6",
     "php-di/phpdoc-reader": "^2.1",
-    "mrself/container": "1.2.0"
+    "mrself/container": "1.3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.5",
