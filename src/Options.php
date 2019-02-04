@@ -162,6 +162,9 @@ class Options
     protected function fillDependencies()
     {
         foreach ($this->schema['allowedTypes'] as $name => $type) {
+            if (!in_array($name, $this->schema['required'])) {
+                continue;
+            }
             if (array_key_exists($name, $this->preOptions)) {
                 continue;
             }

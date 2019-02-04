@@ -26,4 +26,35 @@ class WithOptionsTest extends TestCase
         $object->init(['option1' => 'value1']);
         $this->assertEquals(['option1' => 'value1'], $object->_getOptions());
     }
+
+    public function testOptionsIsNotResolvedAsServiceIfItIsNotRequired()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @var \Reflection
+             */
+            protected $option2;
+
+            protected function getOptionsSchema()
+            {
+                return [
+                    'allowedTypes' => [
+                        'option1' => [\stdClass::class, 'bool']
+                    ],
+                    'defaults' => [
+                        'option1' => false
+                    ]
+                ];
+            }
+
+            public function _options()
+            {
+                return $this->options->getForOwner();
+            }
+        };
+        $object->init([]);
+        $this->assertEquals(['option1' => false], $object->_options());
+    }
 }
