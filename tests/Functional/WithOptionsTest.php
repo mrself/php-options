@@ -57,4 +57,26 @@ class WithOptionsTest extends TestCase
         $object->init([]);
         $this->assertEquals(['option1' => false], $object->_options());
     }
+
+    public function testPreOptionsAreUsed()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            protected function getOptionsSchema()
+            {
+                return [
+                    'required' => ['option1']
+                ];
+            }
+
+            public function _options()
+            {
+                return $this->options->getForOwner();
+            }
+        };
+        $object->setPreOptions(['option1' => 1]);
+        $object->init();
+        $this->assertEquals(['option1' => 1], $object->_options());
+    }
 }
