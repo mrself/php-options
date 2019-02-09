@@ -55,9 +55,13 @@ class PropertiesMeta
 
     public function init()
     {
-        // @todo add exception when 'App' container or app reader not found
-        $this->annotationReader = ContainerRegistry::get('App')
-            ->get('app.annotation_reader');
+        if (ContainerRegistry::has('App')) {
+            $this->annotationReader = ContainerRegistry::get('App')
+                ->get('app.annotation_reader');
+        } else {
+            $this->annotationReader = new AnnotationReader();
+        }
+
         $this->docReader = new PhpDocReader();
     }
 
