@@ -2,6 +2,7 @@
 
 namespace Mrself\Options\Tests\Functional;
 
+use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
 use Mrself\Options\WithOptionsTrait;
 
@@ -135,5 +136,25 @@ class AnnotationSchemaTest extends TestCase
         };
         $object->init();
         $this->assertEquals('str', $object->option1);
+    }
+
+    public function testAnnotationsCachesResult()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option
+             * @var string
+             */
+            public $option1 = 'str';
+        };
+        $object->init();
+        $container = ContainerRegistry::get('App');
+        // Set empty reader because the second time it should use cached result,
+        // and not call reader again
+        $container->set('app.annotation_reader', new class {}, true);
+        $object->init();
+        $this->assertTrue(true);
     }
 }

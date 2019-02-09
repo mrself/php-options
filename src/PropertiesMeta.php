@@ -41,6 +41,8 @@ class PropertiesMeta
      */
     protected $options;
 
+    static private $cache = [];
+
     public static function make(array $options)
     {
         $self = new static();
@@ -64,12 +66,42 @@ class PropertiesMeta
      */
     public function get(): array
     {
-        return ArrayUtil::map($this->properties, function ($value, string $name) {
+        $class = get_class($this->object);
+        if (static::hasCache($class)) {
+            return self::getCached($class);
+        }
+        return $this->runGet($class);
+    }
+
+    /**
+     * @param string $class
+     * @return PropertyMeta[]
+     */
+    private function runGet(string $class)
+    {
+        $result = ArrayUtil::map($this->properties, function ($value, string $name) {
             $reflection = new \ReflectionProperty($this->object, $name);
             $annotations = $this->annotationReader->getPropertyAnnotations($reflection);
             $type = $this->docReader->getPropertyClass($reflection);
             $options = compact('type', 'annotations','name', 'reflection');
             return PropertyMeta::make($options);
         });
+        static::addCache($class, $result);
+        return $result;
+    }
+
+    static private function getCached(string $class)
+    {
+        return static::$cache[$class];
+    }
+
+    static private function addCache(string $class, array $meta)
+    {
+        static::$cache[$class] = $meta;
+    }
+
+    static private function hasCache(string $class)
+    {
+        return array_key_exists($class, static::$cache);
     }
 }
