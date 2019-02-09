@@ -9,7 +9,6 @@ trait DependencyContainerTrait
 {
     protected function getDependencyContainer()
     {
-        ContainerRegistry::reset();
         $container = new class implements ContainerInterface {
             public $services = [];
             public $parameters = [];

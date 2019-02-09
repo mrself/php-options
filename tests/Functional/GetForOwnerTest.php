@@ -4,7 +4,6 @@ namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Annotation\Option;
 use Mrself\Options\WithOptionsTrait;
-use PHPUnit\Framework\TestCase;
 
 class GetForOwnerTest extends TestCase
 {

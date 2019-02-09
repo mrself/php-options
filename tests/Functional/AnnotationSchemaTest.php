@@ -1,11 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Mrself\Options\Tests;
+namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Annotation\Option;
-use Mrself\Options\Tests\Functional\DependencyContainerTrait;
 use Mrself\Options\WithOptionsTrait;
-use PHPUnit\Framework\TestCase;
 
 class AnnotationSchemaTest extends TestCase
 {

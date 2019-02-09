@@ -1,13 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Mrself\Options\Tests;
+namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
-use Mrself\Options\Tests\Functional\DependencyContainerTrait;
 use Mrself\Options\UndefinedContainerException;
 use Mrself\Options\WithOptionsTrait;
-use PHPUnit\Framework\TestCase;
 
 class DependenciesTest extends TestCase
 {

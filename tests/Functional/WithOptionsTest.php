@@ -4,7 +4,6 @@ namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Tests\Functional\Mocks\OptionsMock;
 use Mrself\Options\WithOptionsTrait;
-use PHPUnit\Framework\TestCase;
 
 class WithOptionsTest extends TestCase
 {
