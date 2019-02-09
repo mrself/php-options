@@ -59,6 +59,8 @@ class PropertiesMeta
             $this->annotationReader = ContainerRegistry::get('App')
                 ->get('app.annotation_reader');
         } else {
+            AnnotationRegistry::reset();
+            AnnotationRegistry::registerLoader('class_exists');
             $this->annotationReader = new AnnotationReader();
         }
 

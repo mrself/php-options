@@ -2,6 +2,7 @@
 
 namespace Mrself\Options\Tests\Functional;
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
 use Mrself\Options\WithOptionsTrait;
@@ -156,5 +157,22 @@ class AnnotationSchemaTest extends TestCase
         $container->set('app.annotation_reader', new class {}, true);
         $object->init();
         $this->assertTrue(true);
+    }
+
+    public function testItUsedDefaultAnnotationsReaderIfAppContainerIsAbsent()
+    {
+        ContainerRegistry::reset();
+        AnnotationRegistry::reset();
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option
+             * @var string
+             */
+            public $option1 = 'str';
+        };
+        $object->init();
+        $this->assertEquals('str', $object->option1);
     }
 }
