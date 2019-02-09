@@ -80,7 +80,7 @@ class PropertiesMeta
     private function runGet(string $class)
     {
         $result = ArrayUtil::map($this->properties, function ($value, string $name) {
-            $reflection = new \ReflectionProperty($this->object, $name);
+            $reflection = new \ReflectionProperty(get_class($this->object), $name);
             $annotations = $this->annotationReader->getPropertyAnnotations($reflection);
             $type = $this->docReader->getPropertyClass($reflection);
             $options = compact('type', 'annotations','name', 'reflection');
