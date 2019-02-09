@@ -100,7 +100,6 @@ class DependenciesTest extends TestCase
     public function testContainerNamespaceCanBeOnePart()
     {
         $container = $this->getDependencyContainer();
-        ContainerRegistry::reset();
         ContainerRegistry::add('Mrself', $container);
         $dateTime = new \DateTime();
         $container->services['DateTime'] = $dateTime;
