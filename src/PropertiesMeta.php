@@ -4,6 +4,7 @@ namespace Mrself\Options;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
 use Mrself\Util\ArrayUtil;
 use PhpDocReader\PhpDocReader;
@@ -52,15 +53,10 @@ class PropertiesMeta
 
     public function init()
     {
-        $this->prepareAnnotationReader();
-        $this->annotationReader = new AnnotationReader();
+        // @todo add exception when 'App' container or app reader not found
+        $this->annotationReader = ContainerRegistry::get('App')
+            ->get('app.annotation_reader');
         $this->docReader = new PhpDocReader();
-    }
-
-    protected function prepareAnnotationReader()
-    {
-        AnnotationRegistry::reset();
-        AnnotationRegistry::registerLoader('class_exists');
     }
 
     /**
