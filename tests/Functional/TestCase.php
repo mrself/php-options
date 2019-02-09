@@ -6,12 +6,14 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Mrself\Container\Container;
 use Mrself\Container\Registry\ContainerRegistry;
+use Mrself\Options\PropertiesMeta;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {
         parent::setUp();
+        PropertiesMeta::clearCache();
         ContainerRegistry::reset();
         AnnotationRegistry::reset();
         AnnotationRegistry::registerLoader('class_exists');

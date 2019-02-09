@@ -94,6 +94,11 @@ class PropertiesMeta
         return $result;
     }
 
+    static public function clearCache()
+    {
+        static::$cache = [];
+    }
+
     static private function getCached(string $class)
     {
         return static::$cache[$class];
