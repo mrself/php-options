@@ -59,7 +59,7 @@ trait WithOptionsTrait
 
     protected function makeOptions()
     {
-        $optionsClass = $this->getOptionsClass();
+        $optionsClass = $this->getOptionsClass($this);
         $this->options = $optionsClass::make([
             'properties' => get_object_vars($this),
             'owner' => $this,
@@ -77,10 +77,8 @@ trait WithOptionsTrait
         return '';
     }
 
-    protected function getOptionsClass()
+    protected function getOptionsClass($object)
     {
-        $docReader = new PhpDocReader();
-        $reflectionProperty = new \ReflectionProperty($this, 'options');
-        return $docReader->getPropertyClass($reflectionProperty);
+        return OptionsClass::define($object);
     }
 }
