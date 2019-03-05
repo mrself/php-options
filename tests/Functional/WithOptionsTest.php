@@ -87,4 +87,12 @@ class WithOptionsTest extends TestCase
         WithOptionsMock::mock($mock);
         $this->assertInstanceOf(MockObject::class, WithOptionsMock::make());
     }
+
+    public function testClearMock()
+    {
+        $mock = $this->createMock(WithOptionsMock::class);
+        WithOptionsMock::mock($mock);
+        WithOptionsMock::clearMock();
+        $this->assertNotInstanceOf(MockObject::class, WithOptionsMock::make());
+    }
 }
