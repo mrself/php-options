@@ -16,8 +16,19 @@ trait WithOptionsTrait
      */
     protected $preOptions = [];
 
+    static protected $mock;
+
+    public static function mock($mock)
+    {
+        static::$mock = $mock;
+    }
+
     public static function make(array $options = []): self
     {
+        if (static::$mock) {
+            return static::$mock;
+        }
+
         $self = new static();
         return $self->init($options);
     }
