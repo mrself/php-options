@@ -95,4 +95,26 @@ class WithOptionsTest extends TestCase
         WithOptionsMock::clearMock();
         $this->assertNotInstanceOf(MockObject::class, WithOptionsMock::make());
     }
+
+    public function testItWorksWithDynamicProperties()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            protected function getOptionsSchema()
+            {
+                return [
+                    'required' => ['option1']
+                ];
+            }
+
+            public function _options()
+            {
+                return $this->options->getForOwner();
+            }
+        };
+        $object->dynamicProperty = 1;
+        $object->init(['option1' => 1]);
+        $this->assertTrue(true);
+    }
 }

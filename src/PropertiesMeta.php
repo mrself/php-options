@@ -85,13 +85,18 @@ class PropertiesMeta
      */
     private function runGet(string $class)
     {
-        $result = ArrayUtil::map($this->properties, function ($value, string $name) {
-            $reflection = new \ReflectionProperty(get_class($this->object), $name);
+        $result = [];
+        foreach ($this->properties as $name => $value) {
+            try {
+                $reflection = new \ReflectionProperty(get_class($this->object), $name);
+            } catch (\ReflectionException $e) {
+                continue;
+            }
             $annotations = $this->annotationReader->getPropertyAnnotations($reflection);
             $type = $this->docReader->getPropertyClass($reflection);
             $options = compact('type', 'annotations','name', 'reflection');
-            return PropertyMeta::make($options);
-        });
+            $result[$name] = PropertyMeta::make($options);
+        }
         static::addCache($class, $result);
         return $result;
     }
