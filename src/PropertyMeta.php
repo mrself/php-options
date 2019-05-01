@@ -2,6 +2,8 @@
 
 namespace Mrself\Options;
 
+use Mrself\Options\Annotation\Option;
+
 class PropertyMeta
 {
     /**
@@ -28,7 +30,7 @@ class PropertyMeta
         return $self;
     }
 
-    public function getAnnotation(string $class, $default = null)
+    public function getAnnotation(string $class, $default = null): ?Option
     {
         $result = array_filter($this->annotations, function ($annotation) use ($class) {
             return $annotation instanceof $class;

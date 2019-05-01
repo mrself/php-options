@@ -132,7 +132,6 @@ class Options
         ])->get();
         foreach ($meta as $name => $metaDef) {
             $optionAnnotation = $metaDef->getAnnotation(Option::class);
-            /** @var $optionAnnotation Option */
             if (!$optionAnnotation) {
                 continue;
             }
