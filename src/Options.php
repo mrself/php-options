@@ -38,6 +38,11 @@ class Options
      */
     protected $containerNamespace;
 
+    /**
+     * @param array $options
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
     public function resolve(array $options = [])
     {
         $this->init();
@@ -123,6 +128,9 @@ class Options
 
     /**
      * @todo add support for multiple types like \Class1|\Class2
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     * @throws \PhpDocReader\AnnotationException
      */
     protected function addAnnotationOptionsSchema()
     {
@@ -157,6 +165,10 @@ class Options
         }
     }
 
+    /**
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
     protected function fillDependencies()
     {
         foreach ($this->schema['allowedTypes'] as $name => $type) {
@@ -176,6 +188,12 @@ class Options
         }
     }
 
+    /**
+     * @param string $type
+     * @return mixed
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
     protected function getDependency(string $type)
     {
         return $this->getContainer()->get($type);
@@ -194,11 +212,22 @@ class Options
         return array_slice($parts, 0, 2);
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
     protected function getParameter(string $name)
     {
         return $this->getContainer()->getParameter($name);
     }
 
+    /**
+     * @return mixed
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
     public function getContainer()
     {
         $namespace = $this->getContainerNamespace();

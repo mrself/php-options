@@ -5,8 +5,6 @@ namespace Mrself\Options;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Mrself\Container\Registry\ContainerRegistry;
-use Mrself\Options\Annotation\Option;
-use Mrself\Util\ArrayUtil;
 use PhpDocReader\PhpDocReader;
 
 
@@ -53,6 +51,10 @@ class PropertiesMeta
         return $self;
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
     public function init()
     {
         if (ContainerRegistry::has('App')) {
@@ -69,6 +71,7 @@ class PropertiesMeta
 
     /**
      * @return PropertyMeta[]
+     * @throws \PhpDocReader\AnnotationException
      */
     public function get(): array
     {
@@ -82,6 +85,7 @@ class PropertiesMeta
     /**
      * @param string $class
      * @return PropertyMeta[]
+     * @throws \PhpDocReader\AnnotationException
      */
     private function runGet(string $class)
     {

@@ -8,6 +8,12 @@ class OptionsClass
 {
     private static $cache = [];
 
+    /**
+     * @param $object
+     * @return mixed|string|null
+     * @throws \PhpDocReader\AnnotationException
+     * @throws \ReflectionException
+     */
     public static function define($object)
     {
         $class = get_class($object);

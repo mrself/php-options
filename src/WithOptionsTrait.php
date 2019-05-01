@@ -38,7 +38,13 @@ trait WithOptionsTrait
         return $self->init($options);
     }
 
-	public function init(array $options = [])
+    /**
+     * @param array $options
+     * @return $this
+     * @throws \Mrself\Options\UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
+    public function init(array $options = [])
 	{
         $this->resolveOptions($options);
         return $this;
@@ -49,6 +55,11 @@ trait WithOptionsTrait
         $this->preOptions = array_merge($this->preOptions, $options);
     }
 
+    /**
+     * @param array $options
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
     protected function resolveOptions(array $options = [])
     {
         $this->makeOptions();
@@ -68,6 +79,12 @@ trait WithOptionsTrait
         return [];
     }
 
+    /**
+     * @param array $keys
+     * @return array
+     * @throws \Mrself\Util\MiscUtil\AbsentKeyException
+     * @throws \Mrself\Util\MiscUtil\InvalidSourceException
+     */
     public function onlyOptions(array $keys)
     {
         return $this->options->only($keys);
