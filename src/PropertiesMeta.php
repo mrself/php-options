@@ -10,8 +10,6 @@ use PhpDocReader\PhpDocReader;
 
 class PropertiesMeta
 {
-//    use WithOptionsTrait1;
-
     /**
      *
      * @var AnnotationReader
