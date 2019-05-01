@@ -175,4 +175,21 @@ class AnnotationSchemaTest extends TestCase
         $object->init();
         $this->assertEquals('str', $object->option1);
     }
+
+    /**
+     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
+     */
+    public function testOptionIsRequiredIfAnnotationHasRequiredParameter()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option(dependency=false)
+             * @var \stdClass
+             */
+            public $option1;
+        };
+        $object->init();
+    }
 }

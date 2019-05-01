@@ -119,6 +119,7 @@ class Options
             'normalizers' => [],
             'omitForOwner' => [],
             'locals' => [],
+            'asDependencies' => [],
             // @todo implement this
             'nested' => [],
         ], $this->getSchema(), $this->schema);
@@ -156,6 +157,10 @@ class Options
             if (!is_null($this->properties[$name])) {
                 $this->schema['defaults'][$name] = $this->properties[$name];
             }
+
+            if ($optionAnnotation->dependency) {
+                $this->schema['asDependencies'][] = $name;
+            }
         }
     }
 
@@ -169,6 +174,9 @@ class Options
                 continue;
             }
             if ($this->isPrimitiveType($type)) {
+                continue;
+            }
+            if (!in_array($name, $this->schema['asDependencies'])) {
                 continue;
             }
             $this->preOptions[$name] = $this->getDependency($type);
