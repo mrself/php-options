@@ -27,11 +27,6 @@ class Options
     protected $schema;
 
     /**
-     * @var PropertyMeta[]
-     */
-    protected $optionsMeta = [];
-
-    /**
      * @var array
      */
     protected $properties;
@@ -141,7 +136,6 @@ class Options
             if (!$optionAnnotation) {
                 continue;
             }
-            $this->optionsMeta[$name] = $metaDef;
             if (!in_array($name, $this->schema['required'])) {
                 $this->schema['required'][] = $name;
             }
