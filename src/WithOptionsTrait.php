@@ -47,7 +47,12 @@ trait WithOptionsTrait
     public function init(array $options = [])
 	{
         $this->resolveOptions($options);
+        $this->onInit();
         return $this;
+    }
+
+    protected function onInit()
+    {
     }
 
     public function setPreOptions(array $options = [])
