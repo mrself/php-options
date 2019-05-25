@@ -95,6 +95,11 @@ trait WithOptionsTrait
         return $this->options->only($keys);
     }
 
+    public function getOptions(): array
+    {
+        return $this->options->getForOwner();
+    }
+
     protected function makeOptions()
     {
         $optionsClass = $this->getOptionsClass($this);
