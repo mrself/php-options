@@ -117,4 +117,23 @@ class WithOptionsTest extends TestCase
         $object->init(['option1' => 1]);
         $this->assertTrue(true);
     }
+
+    public function testAllowedTypesCanBeUsedInArray()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            protected function getOptionsSchema()
+            {
+                return [
+                    'allowedTypes' => [
+                        'option1' => ['array', 'boolean']
+                    ],
+                    'required' => ['option1']
+                ];
+            }
+        };
+        $object->init(['option1' => true]);
+        $this->assertTrue(true);
+    }
 }

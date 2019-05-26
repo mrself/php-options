@@ -178,7 +178,7 @@ class Options
             if (array_key_exists($name, $this->preOptions)) {
                 continue;
             }
-            if ($this->isPrimitiveType($type)) {
+            if ($this->isPrimitiveTypes($type)) {
                 continue;
             }
             if (!in_array($name, $this->schema['asDependencies'])) {
@@ -270,5 +270,11 @@ class Options
             'array',
             'double'
         ]);
+    }
+
+    protected function isPrimitiveTypes($types)
+    {
+        $types = (array) $types;
+        return count(array_filter($types, [$this, 'isPrimitiveType']));
     }
 }
