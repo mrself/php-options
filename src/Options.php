@@ -184,6 +184,9 @@ class Options
             if (!in_array($name, $this->schema['asDependencies'])) {
                 continue;
             }
+            if (array_key_exists($name, $this->schema['defaults'])) {
+                continue;
+            }
             $this->preOptions[$name] = $this->getDependency($type);
         }
     }

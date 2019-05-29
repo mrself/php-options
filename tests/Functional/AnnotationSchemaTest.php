@@ -112,6 +112,22 @@ class AnnotationSchemaTest extends TestCase
         $this->assertEquals('str', $object->option1);
     }
 
+    public function testPropertyDefaultValueIsUsedForDependencyOption()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option
+             * @var \DateTime
+             */
+            public $option1;
+        };
+        $object->option1 = new \DateTime();
+        $object->init();
+        $this->assertEquals(date('d'), $object->option1->format('d'));
+    }
+
     /**
      * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
      */
