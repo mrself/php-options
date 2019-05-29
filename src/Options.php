@@ -143,7 +143,8 @@ class Options
             if (!$optionAnnotation) {
                 continue;
             }
-            if (!in_array($name, $this->schema['required'])) {
+            $hasDefault = !is_null($this->properties[$name]);
+            if (!in_array($name, $this->schema['required']) && !$hasDefault) {
                 $this->schema['required'][] = $name;
             }
             if ($optionAnnotation->parameter) {
@@ -155,7 +156,7 @@ class Options
             if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
                 $this->schema['allowedTypes'][$name] = $type;
             }
-            if (!is_null($this->properties[$name])) {
+            if ($hasDefault) {
                 $this->schema['defaults'][$name] = $this->properties[$name];
             }
 
@@ -182,9 +183,6 @@ class Options
                 continue;
             }
             if (!in_array($name, $this->schema['asDependencies'])) {
-                continue;
-            }
-            if (array_key_exists($name, $this->schema['defaults'])) {
                 continue;
             }
             $this->preOptions[$name] = $this->getDependency($type);
