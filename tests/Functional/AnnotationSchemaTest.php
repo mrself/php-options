@@ -128,6 +128,30 @@ class AnnotationSchemaTest extends TestCase
         $this->assertEquals(date('d'), $object->option1->format('d'));
     }
 
+    public function testSchemaDefaultsAreUsed()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option
+             * @var \DateTime
+             */
+            public $option1;
+
+            public function getOptionsSchema()
+            {
+                return [
+                    'defaults' => [
+                        'option1' => new \DateTime()
+                    ]
+                ];
+            }
+        };
+        $object->init();
+        $this->assertEquals(date('d'), $object->option1->format('d'));
+    }
+
     /**
      * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
      */
