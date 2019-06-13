@@ -19,7 +19,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         ContainerRegistry::reset();
         AnnotationRegistry::reset();
         AnnotationRegistry::registerLoader('class_exists');
-        $container = new Container();
+        $container = Container::make();
         $container->set('app.annotation_reader', new AnnotationReader());
         ContainerRegistry::add('App', $container);
     }
