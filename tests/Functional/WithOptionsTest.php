@@ -3,9 +3,7 @@
 namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Tests\Functional\Mocks\OptionsMock;
-use Mrself\Options\Tests\Functional\Mocks\WithOptionsMock;
 use Mrself\Options\WithOptionsTrait;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class WithOptionsTest extends TestCase
 {
@@ -79,21 +77,6 @@ class WithOptionsTest extends TestCase
         $object->setPreOptions(['option1' => 1]);
         $object->init();
         $this->assertEquals(['option1' => 1], $object->_options());
-    }
-
-    public function testMockIsUsedIfProvided()
-    {
-        $mock = $this->createMock(WithOptionsMock::class);
-        WithOptionsMock::mock($mock);
-        $this->assertInstanceOf(MockObject::class, WithOptionsMock::make());
-    }
-
-    public function testClearMock()
-    {
-        $mock = $this->createMock(WithOptionsMock::class);
-        WithOptionsMock::mock($mock);
-        WithOptionsMock::clearMock();
-        $this->assertNotInstanceOf(MockObject::class, WithOptionsMock::make());
     }
 
     public function testItWorksWithDynamicProperties()

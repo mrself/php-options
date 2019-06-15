@@ -18,6 +18,12 @@ trait WithOptionsTrait
 
     static protected $mock;
 
+    /**
+     * Saves last options when it is in mock mode
+     * @var array
+     */
+    static protected $lastOptions;
+
     public static function mock($mock)
     {
         static::$mock = $mock;
@@ -31,11 +37,17 @@ trait WithOptionsTrait
     public static function make(array $options = []): self
     {
         if (static::$mock) {
+            static::$lastOptions = $options;
             return static::$mock;
         }
 
         $self = new static();
         return $self->init($options);
+    }
+
+    public static function getLastOptions(): array
+    {
+        return static::$lastOptions;
     }
 
     /**
