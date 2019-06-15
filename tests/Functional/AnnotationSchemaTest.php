@@ -232,4 +232,19 @@ class AnnotationSchemaTest extends TestCase
         };
         $object->init();
     }
+
+    public function testOptionsCanNotBePassedIfRequiredIsFalse()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option(required=false)
+             * @var \stdClass
+             */
+            public $option1;
+        };
+        $object->init();
+        $this->assertTrue(true);
+    }
 }

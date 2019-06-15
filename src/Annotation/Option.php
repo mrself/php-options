@@ -22,4 +22,9 @@ class Option
      * @var bool
      */
     public $dependency = true;
+
+    /**
+     * @var boolean
+     */
+    public $required = true;
 }

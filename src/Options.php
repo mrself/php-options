@@ -146,7 +146,11 @@ class Options
             $hasDefault = !is_null($this->properties[$name]) ||
                 array_key_exists($name, $this->schema['defaults']);
             if (!in_array($name, $this->schema['required']) && !$hasDefault) {
-                $this->schema['required'][] = $name;
+                if ($optionAnnotation->required) {
+                    $this->schema['required'][] = $name;
+                } else {
+                    $hasDefault = true;
+                }
             }
             if ($optionAnnotation->parameter) {
                 $parameterValue = $this->getParameter($optionAnnotation->parameter);
@@ -156,6 +160,9 @@ class Options
             $type = $metaDef->getType();
             if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
                 $this->schema['allowedTypes'][$name] = $type;
+                if (!$optionAnnotation->required) {
+                    $this->schema['allowedTypes'][$name] = 'null';
+                }
             }
             if ($hasDefault && !array_key_exists($name, $this->schema['defaults'])) {
                 $this->schema['defaults'][$name] = $this->properties[$name];
