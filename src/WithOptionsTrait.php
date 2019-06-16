@@ -32,6 +32,7 @@ trait WithOptionsTrait
     public static function clearMock()
     {
         static::$mock = null;
+        static::$lastOptions = null;
     }
 
     public static function make(array $options = []): self
