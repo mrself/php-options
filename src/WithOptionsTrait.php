@@ -45,7 +45,7 @@ trait WithOptionsTrait
         return $self->init($options);
     }
 
-    public static function getLastOptions(): array
+    public static function getLastOptions(): ?array
     {
         return static::$lastOptions;
     }
