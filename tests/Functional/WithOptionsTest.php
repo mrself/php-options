@@ -23,7 +23,7 @@ class WithOptionsTest extends TestCase
             }
         };
         $object->init(['option1' => 'value1']);
-        $this->assertEquals(['option1' => 'value1'], $object->_getOptions());
+        $this->assertEquals('value1', $object->_getOptions()['option1']);
     }
 
     public function testOptionsIsNotResolvedAsServiceIfItIsNotRequired()
@@ -54,7 +54,7 @@ class WithOptionsTest extends TestCase
             }
         };
         $object->init([]);
-        $this->assertEquals(['option1' => false], $object->_options());
+        $this->assertFalse($object->_options()['option1']);
     }
 
     public function testPreOptionsAreUsed()
@@ -76,7 +76,7 @@ class WithOptionsTest extends TestCase
         };
         $object->setPreOptions(['option1' => 1]);
         $object->init();
-        $this->assertEquals(['option1' => 1], $object->_options());
+        $this->assertEquals(1, $object->_options()['option1']);
     }
 
     public function testItWorksWithDynamicProperties()
