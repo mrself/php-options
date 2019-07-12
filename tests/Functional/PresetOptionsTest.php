@@ -24,4 +24,20 @@ class PresetOptionsTest extends TestCase
         $object->init(['presetName' => 'name']);
         $this->assertEquals('value1', $object->getOptions()['option1']);
     }
+
+    public function testPresetNameCanBeSetWithoutPresetOptionsSet()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            protected function getOptionsSchema()
+            {
+                return [
+                    'required' => ['option1']
+                ];
+            }
+        };
+        $object->init(['presetName' => 'name', 'option1' => 'value1']);
+        $this->assertEquals('value1', $object->getOptions()['option1']);
+    }
 }

@@ -141,7 +141,8 @@ trait WithOptionsTrait
     protected function getPreOptions(): array
     {
         $preOptions = $this->preOptions;
-        if (array_key_exists('presetName', $preOptions)) {
+        if (array_key_exists('presetName', $preOptions) &&
+            array_key_exists($preOptions['presetName'], static::$presetOptions)) {
             $preOptions = static::$presetOptions[$preOptions['presetName']] + $preOptions;
         }
         return $preOptions;
