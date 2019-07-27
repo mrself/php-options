@@ -153,7 +153,7 @@ class AnnotationSchemaTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
+     * @expectedException MissingOptionsException
      */
     public function testItDoNotRetrieveOptionOfPrimitiveTypeFromContainerIfSchemaExists()
     {
@@ -240,11 +240,26 @@ class AnnotationSchemaTest extends TestCase
 
             /**
              * @Option(required=false)
-             * @var \stdClass
+             * @var stdClass
              */
             public $option1;
         };
         $object->init();
+        $this->assertTrue(true);
+    }
+
+    public function testOptionsCanBePassedIfRequiredIsFalse()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option(required=false)
+             * @var \stdClass
+             */
+            public $option1;
+        };
+        $object->init(['option1' => new stdClass()]);
         $this->assertTrue(true);
     }
 }

@@ -159,9 +159,9 @@ class Options
             }
             $type = $metaDef->getType();
             if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
-                $this->schema['allowedTypes'][$name] = $type;
+                $this->schema['allowedTypes'][$name] = [$type];
                 if (!$optionAnnotation->required) {
-                    $this->schema['allowedTypes'][$name] = 'null';
+                    $this->schema['allowedTypes'][$name][] = 'null';
                 }
             }
             if ($hasDefault && !array_key_exists($name, $this->schema['defaults'])) {
@@ -193,7 +193,7 @@ class Options
             if (!in_array($name, $this->schema['asDependencies'])) {
                 continue;
             }
-            $this->preOptions[$name] = $this->getDependency($type);
+            $this->preOptions[$name] = $this->getDependency($type[0]);
         }
     }
 
