@@ -31,6 +31,9 @@ class Options
      */
     protected $properties;
 
+    /**
+     * @var WithOptionsTrait
+     */
     protected $owner;
 
     /**
@@ -159,6 +162,7 @@ class Options
             }
             $type = $metaDef->getType();
             if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
+                $type = $this->defineDependencyType($name, $type, $optionAnnotation->related);
                 $this->schema['allowedTypes'][$name] = [$type];
                 if (!$optionAnnotation->required) {
                     $this->schema['allowedTypes'][$name][] = 'null';
@@ -172,6 +176,16 @@ class Options
                 $this->schema['asDependencies'][] = $name;
             }
         }
+    }
+
+    protected function defineDependencyType(string $name, string $type, $annotationRelated)
+    {
+        if (!$annotationRelated) {
+            return $type;
+        }
+
+        $class = is_bool($annotationRelated) ? $name : $annotationRelated;
+        return $this->owner->getRelatedClass($class);
     }
 
     /**

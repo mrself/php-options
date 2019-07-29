@@ -15,7 +15,7 @@ class DependenciesTest extends TestCase
     {
         $container = $this->getDependencyContainer();
         $dateTime = new \DateTime();
-        $container->services['DateTime'] = $dateTime;
+        $container->set('DateTime', $dateTime);
 
         $object = new class {
             use WithOptionsTrait;
@@ -36,7 +36,7 @@ class DependenciesTest extends TestCase
     {
         $container = $this->getDependencyContainer();
         $dateTime = new \DateTime();
-        $container->services['DateTime'] = $dateTime;
+        $container->set('DateTime', $dateTime);
 
         $object = new class {
             use WithOptionsTrait;
@@ -81,7 +81,7 @@ class DependenciesTest extends TestCase
     public function testParameterIsRetrievedFromContainerByKey()
     {
         $container = $this->getDependencyContainer();
-        $container->parameters['param1'] = 'value1';
+        $container->setParameter('param1', 'value1');
         $object = new class  {
             use WithOptionsTrait;
 
@@ -102,7 +102,7 @@ class DependenciesTest extends TestCase
         $container = $this->getDependencyContainer();
         ContainerRegistry::add('Mrself', $container);
         $dateTime = new \DateTime();
-        $container->services['DateTime'] = $dateTime;
+        $container->set('DateTime', $dateTime);
 
         $object = new class {
             use WithOptionsTrait;

@@ -173,4 +173,27 @@ trait WithOptionsTrait
     {
         return OptionsClass::define($object);
     }
+
+    public function getRelatedClass(string $name)
+    {
+        $name = ucfirst($name);
+        $selfName = ucfirst($this->getOptionsSelfName());
+        $class = preg_replace(
+            '/' . $selfName . '/',
+            $name,
+            $this->getClassName(),
+            1
+        );
+        return str_replace($selfName, $name, $class);
+    }
+
+    protected function getClassName()
+    {
+        return static::class;
+    }
+
+    protected function getOptionsSelfName(): string
+    {
+        throw new \RuntimeException('Not implemented');
+    }
 }

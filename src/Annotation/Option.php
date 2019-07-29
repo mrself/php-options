@@ -27,4 +27,6 @@ class Option
      * @var boolean
      */
     public $required = true;
+
+    public $related = false;
 }

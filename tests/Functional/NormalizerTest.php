@@ -11,7 +11,7 @@ class NormalizerTest extends TestCase
     public function testNormalizersAreCalledWhenAllOptionsAreResolved()
     {
         $container = $this->getDependencyContainer();
-        $container->services['Reflection'] = new \Reflection();
+        $container->set('Reflection', new \Reflection());
         $object = new class {
             use WithOptionsTrait;
 

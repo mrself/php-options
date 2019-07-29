@@ -12,7 +12,7 @@ class GetForOwnerTest extends TestCase
     public function testItOmitsOptionIfAnnotationIsConfigured()
     {
         $container = $this->getDependencyContainer();
-        $container->services['Reflection'] = new \Reflection();
+        $container->set('Reflection', new \Reflection());
         $object = new class {
             use WithOptionsTrait;
 
@@ -25,6 +25,6 @@ class GetForOwnerTest extends TestCase
             public $option1;
         };
         $object->init();
-        $this->assertEquals($container->services['Reflection'], $object->option1);
+        $this->assertEquals($container->get('Reflection'), $object->option1);
     }
 }
