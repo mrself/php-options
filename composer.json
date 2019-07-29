@@ -1,6 +1,5 @@
 {
   "name": "mrself/options",
-  "version": "2.13.2",
   "autoload": {
     "psr-4": {
       "Mrself\\Options\\": "src/"
