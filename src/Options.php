@@ -140,41 +140,46 @@ class Options
         $meta = PropertiesMeta::make([
             'object' => $this->owner,
             'properties' => $this->properties,
-        ])->get();
-        foreach ($meta as $name => $metaDef) {
-            $optionAnnotation = $metaDef->getAnnotation(Option::class);
-            if (!$optionAnnotation) {
-                continue;
-            }
-            $hasDefault = !is_null($this->properties[$name]) ||
-                array_key_exists($name, $this->schema['defaults']);
-            if (!in_array($name, $this->schema['required']) && !$hasDefault) {
-                if ($optionAnnotation->required) {
-                    $this->schema['required'][] = $name;
-                } else {
-                    $hasDefault = true;
-                }
-            }
-            if ($optionAnnotation->parameter) {
-                $parameterValue = $this->getParameter($optionAnnotation->parameter);
-                $this->schema['defaults'][$name] = $parameterValue;
-                continue;
-            }
-            $type = $metaDef->getType();
-            if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
-                $type = $this->defineDependencyType($name, $type, $optionAnnotation->related);
-                $this->schema['allowedTypes'][$name] = [$type];
-                if (!$optionAnnotation->required) {
-                    $this->schema['allowedTypes'][$name][] = 'null';
-                }
-            }
-            if ($hasDefault && !array_key_exists($name, $this->schema['defaults'])) {
-                $this->schema['defaults'][$name] = $this->properties[$name];
-            }
+        ]);
+        $meta->load();
 
-            if ($optionAnnotation->dependency) {
-                $this->schema['asDependencies'][] = $name;
+        foreach ($meta->getByAnnotation(Option::class) as $metaDef) {
+            $this->processOptionAnnotation($metaDef);
+        }
+    }
+
+    protected function processOptionAnnotation(PropertyMeta $meta)
+    {
+        $name = $meta->name;
+        $annotation = $meta->getAnnotation(Option::class);
+        $hasDefault = !is_null($this->properties[$name]) ||
+            array_key_exists($name, $this->schema['defaults']);
+        if (!in_array($name, $this->schema['required']) && !$hasDefault) {
+            if ($annotation->required) {
+                $this->schema['required'][] = $name;
+            } else {
+                $hasDefault = true;
             }
+        }
+        if ($annotation->parameter) {
+            $parameterValue = $this->getParameter($annotation->parameter);
+            $this->schema['defaults'][$name] = $parameterValue;
+            return;
+        }
+        $type = $meta->getType();
+        if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
+            $type = $this->defineDependencyType($name, $type, $annotation->related);
+            $this->schema['allowedTypes'][$name] = [$type];
+            if (!$annotation->required) {
+                $this->schema['allowedTypes'][$name][] = 'null';
+            }
+        }
+        if ($hasDefault && !array_key_exists($name, $this->schema['defaults'])) {
+            $this->schema['defaults'][$name] = $this->properties[$name];
+        }
+
+        if ($annotation->dependency) {
+            $this->schema['asDependencies'][] = $name;
         }
     }
 

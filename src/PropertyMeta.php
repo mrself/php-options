@@ -21,6 +21,11 @@ class PropertyMeta
      */
     protected $reflection;
 
+    /**
+     * @var string
+     */
+    public $name;
+
     public static function make(array $options): self
     {
         $self = new static();
