@@ -142,3 +142,5 @@ This trait can be used with Symfony or another framework with public services.
 No DI, no 100-line constructors. Easy and quickly. Enjoy it.
 
 If you have any questions feel free to contact me. I can guide you and demonstrate how you can use this package in your real project.
+
+For more example see tests.
