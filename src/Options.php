@@ -184,9 +184,7 @@ class Options
             $annotation
         );
 
-        if ($hasDefault && !array_key_exists($name, $this->schema['defaults'])) {
-            $this->schema['defaults'][$name] = $this->properties[$name];
-        }
+        $this->defineDefault($name);
 
         if (@$annotation->dependency) {
             $this->schema['asDependencies'][] = $name;
@@ -356,5 +354,18 @@ class Options
         if (!$annotation->required) {
             $this->schema['allowedTypes'][$name][] = 'null';
         }
+    }
+
+    protected function defineDefault(string $name)
+    {
+        if (array_key_exists($name, $this->schema['defaults'])) {
+            return;
+        }
+
+        if (in_array($name, $this->schema['required'])) {
+            return;
+        }
+
+        $this->schema['defaults'][$name] = $this->properties[$name];
     }
 }
