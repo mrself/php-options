@@ -165,13 +165,9 @@ class Options
     protected function processOptionAnnotation(PropertyMeta $meta, $annotation)
     {
         $name = $meta->name;
-        $hasDefault = $this->hasDefault($name);
-        if (!$this->isRequired($name) && !$hasDefault) {
-            if ($annotation->required) {
-                $this->schema['required'][] = $name;
-            } else {
-                $hasDefault = true;
-            }
+        $isRequired = $this->defineRequired($name, $annotation);
+        if (!$isRequired) {
+            $this->defineDefault($name);
         }
 
         if ($this->defineParameter($name, @$annotation->parameter)) {
@@ -183,8 +179,6 @@ class Options
             $meta->getType(),
             $annotation
         );
-
-        $this->defineDefault($name);
 
         if (@$annotation->dependency) {
             $this->schema['asDependencies'][] = $name;
@@ -362,10 +356,24 @@ class Options
             return;
         }
 
-        if (in_array($name, $this->schema['required'])) {
-            return;
+        $this->schema['defaults'][$name] = $this->properties[$name];
+    }
+
+    protected function defineRequired(string $name, $annotation)
+    {
+        if (!$annotation->required) {
+            return false;
         }
 
-        $this->schema['defaults'][$name] = $this->properties[$name];
+        if (in_array($name, $this->schema['required'])) {
+            return false;
+        }
+
+        if ($this->hasDefault($name)) {
+            return false;
+        }
+
+        $this->schema['required'][] = $name;
+        return true;
     }
 }
