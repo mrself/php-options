@@ -173,11 +173,11 @@ class Options
                 $hasDefault = true;
             }
         }
-        if (@$annotation->parameter) {
-            $parameterValue = $this->getParameter(@$annotation->parameter);
-            $this->schema['defaults'][$name] = $parameterValue;
+
+        if ($this->defineParameter($name, @$annotation->parameter)) {
             return;
         }
+
         $type = $meta->getType();
         if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
             $type = $this->defineDependencyType($name, $type, @$annotation->related);
@@ -334,5 +334,16 @@ class Options
     protected function isRequired(string $name): bool
     {
         return in_array($name, $this->schema['required']);
+    }
+
+    protected function defineParameter(string $name, $parameter): bool
+    {
+        if (!$parameter) {
+            return false;
+        }
+
+        $parameterValue = $this->getParameter($parameter);
+        $this->schema['defaults'][$name] = $parameterValue;
+        return true;
     }
 }
