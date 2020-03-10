@@ -2,6 +2,7 @@
 
 namespace Mrself\Options;
 
+use Mrself\Options\Tests\Functional\AnnotationSchema\RelatedPropertyTest;
 use PhpDocReader\PhpDocReader;
 
 trait WithOptionsTrait
@@ -174,6 +175,12 @@ trait WithOptionsTrait
         return OptionsClass::define($object);
     }
 
+    /**
+     * Returns the class related to the current.
+     * @see RelatedPropertyTest
+     * @param string $name
+     * @return string
+     */
     public function getRelatedClass(string $name)
     {
         $name = ucfirst($name);
