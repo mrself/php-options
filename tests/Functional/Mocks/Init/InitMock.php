@@ -7,4 +7,6 @@ use Mrself\Options\WithOptionsTrait;
 class InitMock
 {
     use WithOptionsTrait;
+
+    public $prop1;
 }

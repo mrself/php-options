@@ -11,6 +11,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Options
 {
     /**
+     * @var WithOptionsTrait[]
+     */
+    protected static $sharedDependencies = [];
+
+    /**
      * @var array
      */
     protected $resolved;
@@ -162,6 +167,8 @@ class Options
      * @param PropertyMeta $meta
      * @param Init $annotation
      * @throws NonOptionableTypeException
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
      */
     protected function processInitAnnotation(PropertyMeta $meta, Init $annotation)
     {
@@ -171,7 +178,26 @@ class Options
         $type = $meta->getType();
 
         $this->ensureClassUsesOptionableTrait($type);
-        $this->preOptions[$meta->name] = $type::make();
+
+        if ($annotation->shared) {
+            $dependency = $this->initDependency($type);
+        } else {
+            $dependency = $type::make();
+        }
+        $this->preOptions[$meta->name] = $dependency;
+    }
+
+    /**
+     * @param WithOptionsTrait|string $type
+     * @return mixed
+     */
+    protected function initDependency(string $type)
+    {
+        if (isset(static::$sharedDependencies[$type])) {
+            return static::$sharedDependencies[$type];
+        }
+
+        return static::$sharedDependencies[$type] = $type::make();
     }
 
     /**
@@ -399,5 +425,27 @@ class Options
 
         $this->schema['required'][] = $name;
         return true;
+    }
+
+    public static function clearSharedDependencies()
+    {
+        static::$sharedDependencies = [];
+    }
+
+    /**
+     * @param string $class
+     * @param WithOptionsTrait $dependency
+     */
+    public static function addSharedDependency(string $class, $dependency)
+    {
+        static::$sharedDependencies[$class] = $dependency;
+    }
+
+    /**
+     * @return WithOptionsTrait[]
+     */
+    public static function getSharedDependencies(): array
+    {
+        return static::$sharedDependencies;
     }
 }

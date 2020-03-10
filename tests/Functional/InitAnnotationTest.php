@@ -3,6 +3,7 @@
 namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Annotation\Init;
+use Mrself\Options\Options;
 use Mrself\Options\Tests\Functional\Mocks\Init\InitMock;
 use Mrself\Options\WithOptionsTrait;
 
@@ -39,5 +40,40 @@ class InitAnnotationTest extends TestCase
             public $option1;
         };
         $object->init();
+    }
+
+    public function testDependencyIsSavedToSharedIfSuchOptionExists()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Init(shared=true)
+             * @var InitMock
+             */
+            public $option1;
+        };
+        $object->init();
+
+        $dependencies = Options::getSharedDependencies();
+        $this->assertArrayHasKey(InitMock::class, $dependencies);
+    }
+
+    public function testDependencyIsTakenFromCacheIfSharedOptionIsTrue()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Init(shared=true)
+             * @var InitMock
+             */
+            public $option1;
+        };
+        $dependency = InitMock::make();
+        $dependency->prop1 = 'value1';
+        Options::addSharedDependency(InitMock::class, $dependency);
+        $object->init();
+        $this->assertEquals('value1', $object->option1->prop1);
     }
 }
