@@ -35,7 +35,7 @@ class PropertyMeta
         return $self;
     }
 
-    public function getAnnotation(string $class, $default = null): ?Option
+    public function getAnnotation(string $class, $default = null)
     {
         $result = array_filter($this->annotations, function ($annotation) use ($class) {
             return $annotation instanceof $class;

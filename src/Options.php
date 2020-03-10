@@ -3,6 +3,7 @@
 namespace Mrself\Options;
 
 use Mrself\Container\Registry\ContainerRegistry;
+use Mrself\Options\Annotation\Init;
 use Mrself\Options\Annotation\Option;
 use Mrself\Util\MiscUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -122,6 +123,7 @@ class Options
             'normalizers' => [],
             'omitForOwner' => [],
             'locals' => [],
+            'init' => [],
             'asDependencies' => [],
             // @todo implement this
             'nested' => [],
@@ -144,16 +146,26 @@ class Options
         $meta->load();
 
         foreach ($meta->getByAnnotation(Option::class) as $metaDef) {
-            $this->processOptionAnnotation($metaDef);
+            $annotation = $metaDef->getAnnotation(Option::class);
+            $this->processOptionAnnotation($metaDef, $annotation);
+        }
+
+        foreach ($meta->getByAnnotation(Init::class) as $metaDef) {
+            $annotation = $metaDef->getAnnotation(Init::class);
+            $this->processInitAnnotation($metaDef, $annotation);
         }
     }
 
-    protected function processOptionAnnotation(PropertyMeta $meta)
+    protected function processInitAnnotation(PropertyMeta $meta, Init $annotation)
+    {
+        $this->processOptionAnnotation($meta, $annotation);
+        $this->schema['init'][$meta->name] = $meta->getType();
+    }
+
+    protected function processOptionAnnotation(PropertyMeta $meta, $annotation)
     {
         $name = $meta->name;
-        $annotation = $meta->getAnnotation(Option::class);
-        $hasDefault = !is_null($this->properties[$name]) ||
-            array_key_exists($name, $this->schema['defaults']);
+        $hasDefault = $this->hasDefault($name);
         if (!in_array($name, $this->schema['required']) && !$hasDefault) {
             if ($annotation->required) {
                 $this->schema['required'][] = $name;
@@ -161,14 +173,14 @@ class Options
                 $hasDefault = true;
             }
         }
-        if ($annotation->parameter) {
-            $parameterValue = $this->getParameter($annotation->parameter);
+        if (@$annotation->parameter) {
+            $parameterValue = $this->getParameter(@$annotation->parameter);
             $this->schema['defaults'][$name] = $parameterValue;
             return;
         }
         $type = $meta->getType();
         if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
-            $type = $this->defineDependencyType($name, $type, $annotation->related);
+            $type = $this->defineDependencyType($name, $type, @$annotation->related);
             $this->schema['allowedTypes'][$name] = [$type];
             if (!$annotation->required) {
                 $this->schema['allowedTypes'][$name][] = 'null';
@@ -178,9 +190,15 @@ class Options
             $this->schema['defaults'][$name] = $this->properties[$name];
         }
 
-        if ($annotation->dependency) {
+        if (@$annotation->dependency) {
             $this->schema['asDependencies'][] = $name;
         }
+    }
+
+    protected function hasDefault(string $name): bool
+    {
+        return !is_null($this->properties[$name]) ||
+                array_key_exists($name, $this->schema['defaults']);
     }
 
     protected function defineDependencyType(string $name, string $type, $annotationRelated)
@@ -203,6 +221,13 @@ class Options
             if (!in_array($name, $this->schema['required'])) {
                 continue;
             }
+
+            $initType = @$this->schema['init'][$name];
+            if ($initType) {
+                $this->preOptions[$name] = $initType::make();
+                continue;
+            }
+
             if (array_key_exists($name, $this->preOptions)) {
                 continue;
             }
