@@ -158,8 +158,9 @@ class Options
 
     protected function processInitAnnotation(PropertyMeta $meta, Init $annotation)
     {
-        $this->processOptionAnnotation($meta, $annotation);
-        $this->schema['init'][$meta->name] = $meta->getType();
+        $this->schema['required'][] = $meta->name;
+        $type = $meta->getType();
+        $this->preOptions[$meta->name] = $type::make();
     }
 
     protected function processOptionAnnotation(PropertyMeta $meta, $annotation)
