@@ -178,14 +178,12 @@ class Options
             return;
         }
 
-        $type = $meta->getType();
-        if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
-            $type = $this->defineDependencyType($name, $type, @$annotation->related);
-            $this->schema['allowedTypes'][$name] = [$type];
-            if (!$annotation->required) {
-                $this->schema['allowedTypes'][$name][] = 'null';
-            }
-        }
+        $this->defineAllowedType(
+            $name,
+            $meta->getType(),
+            $annotation
+        );
+
         if ($hasDefault && !array_key_exists($name, $this->schema['defaults'])) {
             $this->schema['defaults'][$name] = $this->properties[$name];
         }
@@ -345,5 +343,18 @@ class Options
         $parameterValue = $this->getParameter($parameter);
         $this->schema['defaults'][$name] = $parameterValue;
         return true;
+    }
+
+    protected function defineAllowedType(string $name, $type, $annotation)
+    {
+        if (!$type || isset($this->schema['allowedTypes'][$name])) {
+            return;
+        }
+
+        $type = $this->defineDependencyType($name, $type, @$annotation->related);
+        $this->schema['allowedTypes'][$name] = [$type];
+        if (!$annotation->required) {
+            $this->schema['allowedTypes'][$name][] = 'null';
+        }
     }
 }
