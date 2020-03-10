@@ -166,7 +166,10 @@ class Options
     protected function processInitAnnotation(PropertyMeta $meta, Init $annotation)
     {
         $this->schema['required'][] = $meta->name;
+
+        /** @var WithOptionsTrait|string $type */
         $type = $meta->getType();
+
         $this->ensureClassUsesOptionableTrait($type);
         $this->preOptions[$meta->name] = $type::make();
     }
