@@ -133,9 +133,11 @@ class Options
 
     /**
      * @todo add support for multiple types like \Class1|\Class2
+     *
      * @throws UndefinedContainerException
      * @throws \Mrself\Container\Registry\NotFoundException
      * @throws \PhpDocReader\AnnotationException
+     * @throws NonOptionableTypeException
      */
     protected function addAnnotationOptionsSchema()
     {
@@ -156,11 +158,29 @@ class Options
         }
     }
 
+    /**
+     * @param PropertyMeta $meta
+     * @param Init $annotation
+     * @throws NonOptionableTypeException
+     */
     protected function processInitAnnotation(PropertyMeta $meta, Init $annotation)
     {
         $this->schema['required'][] = $meta->name;
         $type = $meta->getType();
+        $this->ensureClassUsesOptionableTrait($type);
         $this->preOptions[$meta->name] = $type::make();
+    }
+
+    /**
+     * @param string $class
+     * @throws NonOptionableTypeException
+     */
+    protected function ensureClassUsesOptionableTrait(string $class)
+    {
+        $traits = class_uses($class);
+        if (!in_array(WithOptionsTrait::class, $traits)) {
+            throw new NonOptionableTypeException($class);
+        }
     }
 
     protected function processOptionAnnotation(PropertyMeta $meta, $annotation)

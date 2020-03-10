@@ -22,4 +22,22 @@ class InitAnnotationTest extends TestCase
         $object->init();
         $this->assertInstanceOf(InitMock::class, $object->option1);
     }
+
+    /**
+     * @expectedException \Mrself\Options\NonOptionableTypeException
+     */
+    public function testItThrowsIfOptionTypeClassDoesNotUseOptionsTrait()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Init()
+             * Set type to StdClass as it does not use WithOptionsTrait
+             * @var \stdClass
+             */
+            public $option1;
+        };
+        $object->init();
+    }
 }
