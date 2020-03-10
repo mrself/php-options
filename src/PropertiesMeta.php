@@ -39,6 +39,13 @@ class PropertiesMeta
 
     static private $cache = [];
 
+    /**
+     * Meta data of properties
+     * @see PropertiesMeta::$properties
+     * @var array
+     */
+    protected $meta = [];
+
     public static function make(array $options)
     {
         $self = new static();
@@ -71,13 +78,13 @@ class PropertiesMeta
      * @return PropertyMeta[]
      * @throws \PhpDocReader\AnnotationException
      */
-    public function get(): array
+    public function load(): array
     {
         $class = get_class($this->object);
         if (static::hasCache($class)) {
             return self::getCached($class);
         }
-        return $this->runGet($class);
+        return $this->runLoad($class);
     }
 
     /**
@@ -85,9 +92,8 @@ class PropertiesMeta
      * @return PropertyMeta[]
      * @throws \PhpDocReader\AnnotationException
      */
-    private function runGet(string $class)
+    private function runLoad(string $class)
     {
-        $result = [];
         foreach ($this->properties as $name => $value) {
             try {
                 $reflection = new \ReflectionProperty(get_class($this->object), $name);
@@ -97,9 +103,21 @@ class PropertiesMeta
             $annotations = $this->annotationReader->getPropertyAnnotations($reflection);
             $type = $this->docReader->getPropertyClass($reflection);
             $options = compact('type', 'annotations','name', 'reflection');
-            $result[$name] = PropertyMeta::make($options);
+            $this->meta[$name] = PropertyMeta::make($options);
         }
-        static::addCache($class, $result);
+
+        static::addCache($class, $this->meta);
+        return $this->meta;
+    }
+
+    public function getByAnnotation(string $annotationClass): array
+    {
+        $result = [];
+        foreach ($this->meta as $item) {
+            if ($item->getAnnotation($annotationClass)) {
+                $result[] = $item;
+            }
+        }
         return $result;
     }
 

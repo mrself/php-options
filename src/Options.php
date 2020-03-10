@@ -3,12 +3,18 @@
 namespace Mrself\Options;
 
 use Mrself\Container\Registry\ContainerRegistry;
+use Mrself\Options\Annotation\Init;
 use Mrself\Options\Annotation\Option;
 use Mrself\Util\MiscUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Options
 {
+    /**
+     * @var WithOptionsTrait[]
+     */
+    protected static $sharedDependencies = [];
+
     /**
      * @var array
      */
@@ -122,6 +128,7 @@ class Options
             'normalizers' => [],
             'omitForOwner' => [],
             'locals' => [],
+            'init' => [],
             'asDependencies' => [],
             // @todo implement this
             'nested' => [],
@@ -131,51 +138,107 @@ class Options
 
     /**
      * @todo add support for multiple types like \Class1|\Class2
+     *
      * @throws UndefinedContainerException
      * @throws \Mrself\Container\Registry\NotFoundException
      * @throws \PhpDocReader\AnnotationException
+     * @throws NonOptionableTypeException
      */
     protected function addAnnotationOptionsSchema()
     {
         $meta = PropertiesMeta::make([
             'object' => $this->owner,
             'properties' => $this->properties,
-        ])->get();
-        foreach ($meta as $name => $metaDef) {
-            $optionAnnotation = $metaDef->getAnnotation(Option::class);
-            if (!$optionAnnotation) {
-                continue;
-            }
-            $hasDefault = !is_null($this->properties[$name]) ||
-                array_key_exists($name, $this->schema['defaults']);
-            if (!in_array($name, $this->schema['required']) && !$hasDefault) {
-                if ($optionAnnotation->required) {
-                    $this->schema['required'][] = $name;
-                } else {
-                    $hasDefault = true;
-                }
-            }
-            if ($optionAnnotation->parameter) {
-                $parameterValue = $this->getParameter($optionAnnotation->parameter);
-                $this->schema['defaults'][$name] = $parameterValue;
-                continue;
-            }
-            $type = $metaDef->getType();
-            if ($type && !array_key_exists($name, $this->schema['allowedTypes'])) {
-                $type = $this->defineDependencyType($name, $type, $optionAnnotation->related);
-                $this->schema['allowedTypes'][$name] = [$type];
-                if (!$optionAnnotation->required) {
-                    $this->schema['allowedTypes'][$name][] = 'null';
-                }
-            }
-            if ($hasDefault && !array_key_exists($name, $this->schema['defaults'])) {
-                $this->schema['defaults'][$name] = $this->properties[$name];
-            }
+        ]);
+        $meta->load();
 
-            if ($optionAnnotation->dependency) {
-                $this->schema['asDependencies'][] = $name;
-            }
+        foreach ($meta->getByAnnotation(Option::class) as $metaDef) {
+            $annotation = $metaDef->getAnnotation(Option::class);
+            $this->processOptionAnnotation($metaDef, $annotation);
         }
+
+        foreach ($meta->getByAnnotation(Init::class) as $metaDef) {
+            $annotation = $metaDef->getAnnotation(Init::class);
+            $this->processInitAnnotation($metaDef, $annotation);
+        }
+    }
+
+    /**
+     * @param PropertyMeta $meta
+     * @param Init $annotation
+     * @throws NonOptionableTypeException
+     * @throws UndefinedContainerException
+     * @throws \Mrself\Container\Registry\NotFoundException
+     */
+    protected function processInitAnnotation(PropertyMeta $meta, Init $annotation)
+    {
+        $this->schema['required'][] = $meta->name;
+
+        /** @var WithOptionsTrait|string $type */
+        $type = $meta->getType();
+
+        $this->ensureClassUsesOptionableTrait($type);
+
+        if ($annotation->shared) {
+            $dependency = $this->initDependency($type);
+        } else {
+            $dependency = $type::make();
+        }
+        $this->preOptions[$meta->name] = $dependency;
+    }
+
+    /**
+     * @param WithOptionsTrait|string $type
+     * @return mixed
+     */
+    protected function initDependency(string $type)
+    {
+        if (isset(static::$sharedDependencies[$type])) {
+            return static::$sharedDependencies[$type];
+        }
+
+        return static::$sharedDependencies[$type] = $type::make();
+    }
+
+    /**
+     * @param string $class
+     * @throws NonOptionableTypeException
+     */
+    protected function ensureClassUsesOptionableTrait(string $class)
+    {
+        $traits = class_uses($class);
+        if (!in_array(WithOptionsTrait::class, $traits)) {
+            throw new NonOptionableTypeException($class);
+        }
+    }
+
+    protected function processOptionAnnotation(PropertyMeta $meta, $annotation)
+    {
+        $name = $meta->name;
+        $isRequired = $this->defineRequired($name, $annotation);
+        if (!$isRequired) {
+            $this->defineDefault($name);
+        }
+
+        if ($this->defineParameter($name, @$annotation->parameter)) {
+            return;
+        }
+
+        $this->defineAllowedType(
+            $name,
+            $meta->getType(),
+            $annotation
+        );
+
+        if (@$annotation->dependency) {
+            $this->schema['asDependencies'][] = $name;
+        }
+    }
+
+    protected function hasDefault(string $name): bool
+    {
+        return !is_null($this->properties[$name]) ||
+                array_key_exists($name, $this->schema['defaults']);
     }
 
     protected function defineDependencyType(string $name, string $type, $annotationRelated)
@@ -198,6 +261,13 @@ class Options
             if (!in_array($name, $this->schema['required'])) {
                 continue;
             }
+
+            $initType = @$this->schema['init'][$name];
+            if ($initType) {
+                $this->preOptions[$name] = $initType::make();
+                continue;
+            }
+
             if (array_key_exists($name, $this->preOptions)) {
                 continue;
             }
@@ -299,5 +369,83 @@ class Options
     {
         $types = (array) $types;
         return count(array_filter($types, [$this, 'isPrimitiveType']));
+    }
+
+    protected function isRequired(string $name): bool
+    {
+        return in_array($name, $this->schema['required']);
+    }
+
+    protected function defineParameter(string $name, $parameter): bool
+    {
+        if (!$parameter) {
+            return false;
+        }
+
+        $parameterValue = $this->getParameter($parameter);
+        $this->schema['defaults'][$name] = $parameterValue;
+        return true;
+    }
+
+    protected function defineAllowedType(string $name, $type, $annotation)
+    {
+        if (!$type || isset($this->schema['allowedTypes'][$name])) {
+            return;
+        }
+
+        $type = $this->defineDependencyType($name, $type, @$annotation->related);
+        $this->schema['allowedTypes'][$name] = [$type];
+        if (!$annotation->required) {
+            $this->schema['allowedTypes'][$name][] = 'null';
+        }
+    }
+
+    protected function defineDefault(string $name)
+    {
+        if (array_key_exists($name, $this->schema['defaults'])) {
+            return;
+        }
+
+        $this->schema['defaults'][$name] = $this->properties[$name];
+    }
+
+    protected function defineRequired(string $name, $annotation)
+    {
+        if (!$annotation->required) {
+            return false;
+        }
+
+        if (in_array($name, $this->schema['required'])) {
+            return false;
+        }
+
+        if ($this->hasDefault($name)) {
+            return false;
+        }
+
+        $this->schema['required'][] = $name;
+        return true;
+    }
+
+    public static function clearSharedDependencies()
+    {
+        static::$sharedDependencies = [];
+    }
+
+    /**
+     * @param string $class
+     * @param WithOptionsTrait $dependency
+     */
+    public static function addSharedDependency(string $class, $dependency)
+    {
+        static::$sharedDependencies[$class] = $dependency;
+    }
+
+    /**
+     * @return WithOptionsTrait[]
+     */
+    public static function getSharedDependencies(): array
+    {
+        return static::$sharedDependencies;
     }
 }

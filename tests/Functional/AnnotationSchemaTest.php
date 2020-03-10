@@ -262,4 +262,19 @@ class AnnotationSchemaTest extends TestCase
         $object->init(['option1' => new \stdClass()]);
         $this->assertTrue(true);
     }
+
+    public function testAnnotationsCanBeReadForPrivateProperty()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option(required=false)
+             * @var \stdClass
+             */
+            private $option1;
+        };
+        $object->init(['option1' => new \stdClass()]);
+        $this->assertTrue(true);
+    }
 }
