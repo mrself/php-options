@@ -166,7 +166,7 @@ class Options
     {
         $name = $meta->name;
         $hasDefault = $this->hasDefault($name);
-        if (!in_array($name, $this->schema['required']) && !$hasDefault) {
+        if (!$this->isRequired($name) && !$hasDefault) {
             if ($annotation->required) {
                 $this->schema['required'][] = $name;
             } else {
@@ -329,5 +329,10 @@ class Options
     {
         $types = (array) $types;
         return count(array_filter($types, [$this, 'isPrimitiveType']));
+    }
+
+    protected function isRequired(string $name): bool
+    {
+        return in_array($name, $this->schema['required']);
     }
 }
