@@ -195,7 +195,7 @@ class AnnotationSchemaTest extends TestCase
         // Set empty reader because the second time it should use cached result,
         // and not call reader again
         $container->set('app.annotation_reader', new class {}, true);
-        $object->init();
+        $object->init(['option1' => 'str2']);
         $this->assertTrue(true);
     }
 
@@ -276,5 +276,23 @@ class AnnotationSchemaTest extends TestCase
         };
         $object->init(['option1' => new \stdClass()]);
         $this->assertTrue(true);
+    }
+
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testCachedResultIsUsedForPropertiesMeta()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Option()
+             * @var \stdClass
+             */
+            private $option1;
+        };
+        $object->init(['option1' => new \stdClass()]);
+        $object->init(['option1' => new \stdClass()]);
     }
 }
