@@ -48,6 +48,11 @@ class Options
     protected $containerNamespace;
 
     /**
+     * @var array
+     */
+    private $metaOptions = ['silent' => false];
+
+    /**
      * @param array $options
      * @throws UndefinedContainerException
      * @throws \Mrself\Container\Registry\NotFoundException
@@ -56,6 +61,7 @@ class Options
     {
         $this->init();
         $this->setPreOptions($options);
+        $this->pullMetaOptions();
         $this->initSchema();
         $this->optionsResolver = new OptionsResolver();
         $this->optionsResolver->setDefaults($this->schema['defaults']);
@@ -69,6 +75,32 @@ class Options
         $this->fillDependencies();
         $this->resolved = $this->optionsResolver->resolve($this->preOptions);
         $this->normalize();
+    }
+
+    protected function pullMetaOptions()
+    {
+        foreach ($this->preOptions as $option => $value) {
+            if ($this->isOptionMeta($option)) {
+                $this->addMetaOption($option, $value);
+                unset($this->preOptions[$option]);
+            }
+        }
+    }
+
+    protected function addMetaOption(string $option, $value)
+    {
+        $option = $this->toMetaOption($option);
+        $this->metaOptions[$option] = $value;
+    }
+
+    protected function toMetaOption(string $option): string
+    {
+        return str_replace('.', '', $option);
+    }
+
+    protected function isOptionMeta(string $option): bool
+    {
+        return $option[0] === '.';
     }
 
     public static function make(array $params)
@@ -134,6 +166,19 @@ class Options
             'nested' => [],
         ], $this->getSchema(), $this->schema);
         $this->addAnnotationOptionsSchema();
+        $this->processIgnoreNonPassed();
+    }
+
+    protected function processIgnoreNonPassed()
+    {
+        if (!$this->metaOptions['silent']) {
+            return;
+        }
+
+        $required = $this->schema['required'];
+        $this->schema['required'] = array_filter($required, function (string $option) {
+            return array_key_exists($option, $this->preOptions);
+        });
     }
 
     /**

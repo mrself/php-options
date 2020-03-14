@@ -52,6 +52,16 @@ trait WithOptionsTrait
         return $self->init($options);
     }
 
+    /**
+     * @param array $options
+     * @return $this
+     */
+    public static function silentMake(array $options = [])
+    {
+        $options['.silent'] = true;
+        return static::make($options);
+    }
+
     public static function getLastOptions(): ?array
     {
         return static::$lastOptions;
