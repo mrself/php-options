@@ -175,10 +175,15 @@ class Options
             return;
         }
 
-        $required = $this->schema['required'];
-        $this->schema['required'] = array_filter($required, function (string $option) {
-            return array_key_exists($option, $this->preOptions);
-        });
+        $this->schema['required'] = array_intersect(
+            $this->schema['required'],
+            array_keys($this->preOptions)
+        );
+
+        $this->schema['allowedTypes'] = array_intersect_assoc(
+            $this->schema['allowedTypes'],
+            $this->preOptions
+        );
     }
 
     /**
