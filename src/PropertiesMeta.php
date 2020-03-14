@@ -75,21 +75,20 @@ class PropertiesMeta
     }
 
     /**
-     * @return PropertyMeta[]
      * @throws \PhpDocReader\AnnotationException
      */
-    public function load(): array
+    public function load()
     {
         $class = get_class($this->object);
         if (static::hasCache($class)) {
-            return self::getCached($class);
+            $this->meta = self::getCached($class);
+        } else {
+            $this->runLoad($class);
         }
-        return $this->runLoad($class);
     }
 
     /**
      * @param string $class
-     * @return PropertyMeta[]
      * @throws \PhpDocReader\AnnotationException
      */
     private function runLoad(string $class)
@@ -107,7 +106,6 @@ class PropertiesMeta
         }
 
         static::addCache($class, $this->meta);
-        return $this->meta;
     }
 
     public function getByAnnotation(string $annotationClass): array
