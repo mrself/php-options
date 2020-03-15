@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4bff958e4e970f8c5f68287d2868ec9",
+    "content-hash": "46f2cf70c53387219f6d59896a69d483",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -130,20 +130,19 @@
         },
         {
             "name": "mrself/container",
-            "version": "v1.5.1",
+            "version": "v1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrself/php-container.git",
-                "reference": "5e7c07b9e801d07d47ad42f76f266715ba441c3e"
+                "reference": "491499fd711a39949f5dc3dd926f9d2731a3697c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrself/php-container/zipball/5e7c07b9e801d07d47ad42f76f266715ba441c3e",
-                "reference": "5e7c07b9e801d07d47ad42f76f266715ba441c3e",
+                "url": "https://api.github.com/repos/mrself/php-container/zipball/491499fd711a39949f5dc3dd926f9d2731a3697c",
+                "reference": "491499fd711a39949f5dc3dd926f9d2731a3697c",
                 "shasum": ""
             },
             "require": {
-                "mrself/options": "^2.8",
                 "php": "^7.2"
             },
             "require-dev": {
@@ -157,7 +156,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-07-29T07:13:53+00:00"
+            "time": "2020-03-15T20:27:03+00:00"
         },
         {
             "name": "mrself/util",
