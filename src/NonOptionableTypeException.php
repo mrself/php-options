@@ -6,6 +6,6 @@ class NonOptionableTypeException extends OptionsException
 {
     public function __construct(string $class)
     {
-        parent::__construct('The class pointed with @Init annotation does not use WithOptionsTrait. Only classes using this trait are processed with @Init annotation');
+        parent::__construct('The class pointed with @Init annotation does not implements OptionableInterface. Only classes implementing it are processed with @Init annotation');
     }
 }
