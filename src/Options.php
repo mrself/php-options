@@ -256,8 +256,8 @@ class Options
      */
     protected function ensureClassUsesOptionableTrait(string $class)
     {
-        $traits = class_uses($class);
-        if (!in_array(WithOptionsTrait::class, $traits)) {
+        $interfaces = class_implements($class);
+        if (!in_array(OptionableInterface::class, $interfaces)) {
             throw new NonOptionableTypeException($class);
         }
     }

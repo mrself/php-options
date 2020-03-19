@@ -2,9 +2,10 @@
 
 namespace Mrself\Options\Tests\Functional\Mocks\Init;
 
+use Mrself\Options\OptionableInterface;
 use Mrself\Options\WithOptionsTrait;
 
-class InitMock
+class InitMock implements OptionableInterface
 {
     use WithOptionsTrait;
 

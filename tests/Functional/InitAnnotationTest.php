@@ -4,6 +4,7 @@ namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Annotation\Init;
 use Mrself\Options\Options;
+use Mrself\Options\Tests\Functional\Mocks\Init\ExtendedInitMock;
 use Mrself\Options\Tests\Functional\Mocks\Init\InitMock;
 use Mrself\Options\WithOptionsTrait;
 
@@ -22,6 +23,23 @@ class InitAnnotationTest extends TestCase
         };
         $object->init();
         $this->assertInstanceOf(InitMock::class, $object->option1);
+    }
+
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testItDoesNotThrowIfVarClassIsExtendedFromClassWithNecessaryTrait()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Init()
+             * @var ExtendedInitMock
+             */
+            public $option1;
+        };
+        $object->init();
     }
 
     /**
