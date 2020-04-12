@@ -50,12 +50,4 @@ class PropertyMeta
     {
         return $this->type;
     }
-
-    /**
-     * @return \ReflectionProperty
-     */
-    public function getReflection(): \ReflectionProperty
-    {
-        return $this->reflection;
-    }
 }
