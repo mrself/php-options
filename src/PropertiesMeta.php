@@ -12,6 +12,8 @@ use PhpDocReader\PhpDocReader;
 
 class PropertiesMeta
 {
+    const CACHE_PREFIX = 'mrself/options:';
+
     /**
      * @var PhpDocReader
      */
@@ -81,7 +83,7 @@ class PropertiesMeta
             $this->annotationReader = new AnnotationReader();
         }
 
-        $this->cacheId = 'mrself/options:' . $this->objectClass;
+        $this->cacheId = static::CACHE_PREFIX . $this->objectClass;
     }
 
     /**
