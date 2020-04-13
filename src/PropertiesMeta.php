@@ -110,6 +110,7 @@ class PropertiesMeta
         $cached = $memcached->get($this->cacheId);
         if ($cached) {
             $this->meta = $cached;
+            static::addCache($this->cacheId, $this->meta);
         } else {
             $this->runLoad();
             $memcached->set($this->cacheId, $this->meta);
