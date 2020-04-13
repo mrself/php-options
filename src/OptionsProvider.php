@@ -18,7 +18,6 @@ class OptionsProvider
 
         if (ContainerRegistry::has('App')) {
             $appContainer = ContainerRegistry::get('App');
-//            $cache = $appContainer->get('cache.adapter.memcached');
             $annotationReader = $appContainer->get('app.annotation_reader');
         } else {
             AnnotationRegistry::reset();
