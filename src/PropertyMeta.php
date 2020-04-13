@@ -17,11 +17,6 @@ class PropertyMeta
     protected $type;
 
     /**
-     * @var \ReflectionProperty
-     */
-    protected $reflection;
-
-    /**
      * @var string
      */
     public $name;
