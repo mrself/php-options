@@ -24,7 +24,6 @@ class OptionsProvider
             AnnotationRegistry::registerLoader('class_exists');
             $annotationReader = new AnnotationReader();
         }
-        $cache = null;
 
         $container->set('annotation_reader', $annotationReader);
         PropertiesMeta::register(new PhpDocReader());
