@@ -127,7 +127,12 @@ class PropertiesMeta
             } catch (\ReflectionException $e) {
                 continue;
             }
+
             $annotations = $this->getAnnotations($reflection);
+            if (!$annotations) {
+                continue;
+            }
+
             $type = $this->getDocReader()->getPropertyClass($reflection);
             $options = compact('type', 'annotations','name');
             $this->meta[$name] = PropertyMeta::make($options);
