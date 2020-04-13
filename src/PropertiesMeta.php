@@ -4,7 +4,6 @@ namespace Mrself\Options;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Mrself\Container\Container;
 use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Util\ArrayUtil;
 use PhpDocReader\PhpDocReader;
@@ -13,16 +12,14 @@ use PhpDocReader\PhpDocReader;
 class PropertiesMeta
 {
     /**
+     * @var PhpDocReader
+     */
+    private static $docReader;
+    /**
      *
      * @var AnnotationReader
      */
     protected $annotationReader;
-
-    /**
-     *
-     * @var PhpDocReader
-     */
-    protected $docReader;
 
     /**
      * @var array
@@ -58,6 +55,11 @@ class PropertiesMeta
         return $self;
     }
 
+    public static function register(PhpDocReader $reader)
+    {
+        static::$docReader = $reader;
+    }
+
     /**
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \Mrself\Container\Registry\NotFoundException
@@ -72,8 +74,6 @@ class PropertiesMeta
             AnnotationRegistry::registerLoader('class_exists');
             $this->annotationReader = new AnnotationReader();
         }
-
-        $this->docReader = new PhpDocReader();
     }
 
     /**
@@ -119,7 +119,7 @@ class PropertiesMeta
                 continue;
             }
             $annotations = $this->getAnnotations($reflection);
-            $type = $this->docReader->getPropertyClass($reflection);
+            $type = $this->getDocReader()->getPropertyClass($reflection);
             $options = compact('type', 'annotations','name');
             $this->meta[$name] = PropertyMeta::make($options);
         }
@@ -166,5 +166,14 @@ class PropertiesMeta
     static private function hasCache(string $class)
     {
         return array_key_exists($class, static::$cache);
+    }
+
+    private function getDocReader()
+    {
+        if (static::$docReader) {
+            return static::$docReader;
+        }
+
+        return new PhpDocReader();
     }
 }

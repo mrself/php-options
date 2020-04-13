@@ -27,6 +27,6 @@ class OptionsProvider
         $cache = null;
 
         $container->set('annotation_reader', $annotationReader);
-        $container->set('doc_reader', new PhpDocReader());
+        PropertiesMeta::register(new PhpDocReader());
     }
 }
