@@ -20,7 +20,7 @@ class SchemaBench
     }
 
     /**
-     * @Revs(1000)
+     * @Revs(10000)
      */
     public function benchAnnotation()
     {
