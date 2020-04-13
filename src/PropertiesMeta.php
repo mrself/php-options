@@ -4,6 +4,7 @@ namespace Mrself\Options;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Mrself\Container\Container;
 use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Util\ArrayUtil;
 use PhpDocReader\PhpDocReader;
@@ -45,6 +46,16 @@ class PropertiesMeta
      */
     protected $meta = [];
 
+    /**
+     * @var string
+     */
+    private $class;
+
+    /**
+     * @var string
+     */
+    private $cacheId;
+
     public static function make(array $options)
     {
         $self = new static();
@@ -74,6 +85,9 @@ class PropertiesMeta
             AnnotationRegistry::registerLoader('class_exists');
             $this->annotationReader = new AnnotationReader();
         }
+
+        $this->class = get_class($this->object);
+        $this->cacheId = 'mrself/options:' . $this->class;
     }
 
     /**
@@ -82,35 +96,36 @@ class PropertiesMeta
      */
     public function load()
     {
-        $class = get_class($this->object);
-        $cacheId = 'mrself/options:' . $class;
-
-        $container = ContainerRegistry::get('Mrself\Options', null);
-        if (!$container || !$container->get('cache', null)) {
-            if (static::hasCache($cacheId)) {
-                $this->meta = self::getCached($cacheId);
-            } else {
-                $this->runLoad($class, $cacheId);
-            }
+        if (static::hasCache($this->cacheId)) {
+            $this->meta = self::getCached($this->cacheId);
             return;
         }
 
+        $container = ContainerRegistry::get('Mrself\Options', null);
+        if ($container && $container->get('cache', null)) {
+            $this->loadMemcached($container);
+        } else {
+            $this->runLoad();
+        }
+    }
+
+    private function loadMemcached(Container $container)
+    {
         /** @var Memcached $memcached */
         $memcached = $container->get('cache');
-        $cached = $memcached->get($cacheId);
+        $cached = $memcached->get($this->cacheId);
         if ($cached) {
             $this->meta = $cached;
         } else {
-            $this->runLoad($class, $cacheId);
-            $memcached->set($cacheId, $this->meta);
+            $this->runLoad();
+            $memcached->set($this->cacheId, $this->meta);
         }
     }
 
     /**
-     * @param string $class
      * @throws \PhpDocReader\AnnotationException
      */
-    private function runLoad(string $class, string $cacheId)
+    private function runLoad()
     {
         foreach ($this->properties as $name => $value) {
             try {
@@ -124,7 +139,7 @@ class PropertiesMeta
             $this->meta[$name] = PropertyMeta::make($options);
         }
 
-        static::addCache($cacheId, $this->meta);
+        static::addCache($this->cacheId, $this->meta);
     }
 
     private function getAnnotations(\ReflectionProperty $reflection)
