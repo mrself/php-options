@@ -139,8 +139,77 @@ $instance->getService()->property === 'myProperty';
 ```
 
 This trait can be used with Symfony or another framework with public services.
-No DI, no 100-line constructors. Easy and quickly. Enjoy it.
 
-If you have any questions feel free to contact me. I can guide you and demonstrate how you can use this package in your real project.
+Suspend all errors:
 
-For more example see tests.
+```php
+$object->init(['.silent' => true]);
+```
+---
+
+If an annotated property has a non-primitive type, the property can be resolved only of that type:
+
+```php
+$object = new class {
+    /**
+     * @Option
+     * @var \Reflection
+     */
+    public $option1;
+};
+
+// Throws since 'option1' expected a value of type '\Reflection'
+$object->init(['option1' => 1]);
+```
+---
+
+Primitive types are not processed so they should be declared in array schema:
+
+```php
+new class {
+    protected function getOptionsSchema()
+    {
+        return [
+            'allowedTypes' => ['option1' => \Reflection::class]
+        ];
+    }
+ };
+```
+
+---
+
+Array schema has a higher priority than an annotation schema
+
+---
+
+An option can be set as optional:
+
+```php
+$object = new class {
+    /**
+     * @Option(required=false)
+     * @var \Reflection
+     */
+    public $option1;
+};
+```
+
+---
+
+Options can be preset by a specific key:
+
+```php
+$object = new class {
+
+    /**
+     * @Option()
+     * @var string
+     */
+    public $option1;
+};
+$object::presetOptions('nameOfPreset', [
+    'option1' => 'value1'
+]);
+$object->init(['presetName' => 'nameOfPreset']);
+$object->option1 === 'value1';
+```
