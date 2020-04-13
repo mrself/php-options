@@ -129,7 +129,7 @@ class PropertiesMeta
     {
         foreach ($this->properties as $name => $value) {
             try {
-                $reflection = new \ReflectionProperty(get_class($this->object), $name);
+                $reflection = new \ReflectionProperty($this->class, $name);
             } catch (\ReflectionException $e) {
                 continue;
             }
