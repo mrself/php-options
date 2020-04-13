@@ -17,11 +17,6 @@ class PropertyMeta
     protected $type;
 
     /**
-     * @var \ReflectionProperty
-     */
-    protected $reflection;
-
-    /**
      * @var string
      */
     public $name;
@@ -38,7 +33,7 @@ class PropertyMeta
     public function getAnnotation(string $class, $default = null)
     {
         $result = array_filter($this->annotations, function ($annotation) use ($class) {
-            return $annotation instanceof $class;
+            return $annotation['class'] === $class;
         });
         return reset($result) ?: $default;
     }
@@ -49,13 +44,5 @@ class PropertyMeta
     public function getType(): ?string
     {
         return $this->type;
-    }
-
-    /**
-     * @return \ReflectionProperty
-     */
-    public function getReflection(): \ReflectionProperty
-    {
-        return $this->reflection;
     }
 }

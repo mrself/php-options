@@ -2,7 +2,9 @@
 
 namespace Mrself\Options\Tests\Functional;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Mrself\Container\Container;
 use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
 use Mrself\Options\WithOptionsTrait;
@@ -181,6 +183,10 @@ class AnnotationSchemaTest extends TestCase
 
     public function testAnnotationsCachesResult()
     {
+        $container = Container::make();
+        $container->set('app.annotation_reader', new AnnotationReader());
+        ContainerRegistry::add('App', $container);
+
         $object = new class {
             use WithOptionsTrait;
 
@@ -195,6 +201,7 @@ class AnnotationSchemaTest extends TestCase
         // Set empty reader because the second time it should use cached result,
         // and not call reader again
         $container->set('app.annotation_reader', new class {}, true);
+        ContainerRegistry::get('Mrself\Options')->set('cache', null, true);
         $object->init(['option1' => 'str2']);
         $this->assertTrue(true);
     }

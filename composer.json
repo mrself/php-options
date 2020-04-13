@@ -15,10 +15,12 @@
     "mrself/util": "^1.5.0",
     "doctrine/annotations": "^1.6",
     "php-di/phpdoc-reader": "^2.1",
-    "mrself/container": "*"
+    "mrself/container": "*",
+    "ext-memcached": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.5",
-    "symfony/var-dumper": "^4.2"
+    "symfony/var-dumper": "^4.2",
+    "phpbench/phpbench": "^1.0@dev"
   }
 }

@@ -137,10 +137,9 @@ trait WithOptionsTrait
 
     protected function makeOptions()
     {
-        $optionsClass = $this->getOptionsClass($this);
         $schema = $this->getOptionsSchema();
         $this->addBuiltinSchema($schema);
-        $this->options = $optionsClass::make([
+        $this->options = Options::make([
             'properties' => get_object_vars($this),
             'owner' => $this,
             'schema' => $schema,
@@ -178,11 +177,6 @@ trait WithOptionsTrait
             return $this->optionsContainerNamespace;
         }
         return '';
-    }
-
-    protected function getOptionsClass($object)
-    {
-        return OptionsClass::define($object);
     }
 
     /**
