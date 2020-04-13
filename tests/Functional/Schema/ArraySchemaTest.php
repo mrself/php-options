@@ -24,4 +24,22 @@ class ArraySchemaTest extends TestCase
         };
         $object->init();
     }
+
+    public function testDefaultValueForOptionIsUsedIfValueIsNotProvided()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            public $option1;
+
+            protected function getOptionsSchema()
+            {
+                return [
+                    'defaults' => ['option1' => 'value1']
+                ];
+            }
+        };
+        $object->init();
+        $this->assertEquals('value1', $object->option1);
+    }
 }
