@@ -53,6 +53,12 @@ class Options
     private $metaOptions = ['silent' => false];
 
     /**
+     * Class of the owner
+     * @var string
+     */
+    private $ownerClass;
+
+    /**
      * @param array $options
      * @throws UndefinedContainerException
      * @throws \Mrself\Container\Registry\NotFoundException
@@ -111,6 +117,7 @@ class Options
         $self->schema = $params['schema'];
         $self->preOptions = $params['preOptions'] ?: [];
         $self->containerNamespace = $params['containerNamespace'];
+        $self->ownerClass = $params['class'];
         return $self;
     }
 
@@ -197,7 +204,7 @@ class Options
     protected function addAnnotationOptionsSchema()
     {
         $meta = PropertiesMeta::make([
-            'object' => $this->owner,
+            'objectClass' => $this->ownerClass,
             'properties' => $this->properties,
         ]);
         $meta->load();
@@ -350,7 +357,7 @@ class Options
         if ($this->containerNamespace) {
             return $this->containerNamespace;
         }
-        $ownerClass = get_class($this->owner);
+        $ownerClass = $this->ownerClass;
         $parts = explode('\\', $ownerClass);
         return array_slice($parts, 0, 2);
     }
@@ -382,7 +389,7 @@ class Options
             $namespace[0];
             $container = ContainerRegistry::get($namespace[0], '');
         }
-        $class = get_class($this->owner);
+        $class = $this->ownerClass;
         if ('' === $container) {
             throw new UndefinedContainerException($namespace, $class);
         }

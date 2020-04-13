@@ -30,7 +30,7 @@ class PropertiesMeta
     /**
      * @var mixed
      */
-    protected $object;
+    protected $objectClass;
 
     /**
      * @var PropertiesMetaOptions
@@ -45,11 +45,6 @@ class PropertiesMeta
      * @var array
      */
     protected $meta = [];
-
-    /**
-     * @var string
-     */
-    private $class;
 
     /**
      * @var string
@@ -86,8 +81,7 @@ class PropertiesMeta
             $this->annotationReader = new AnnotationReader();
         }
 
-        $this->class = get_class($this->object);
-        $this->cacheId = 'mrself/options:' . $this->class;
+        $this->cacheId = 'mrself/options:' . $this->objectClass;
     }
 
     /**
@@ -129,7 +123,7 @@ class PropertiesMeta
     {
         foreach ($this->properties as $name => $value) {
             try {
-                $reflection = new \ReflectionProperty($this->class, $name);
+                $reflection = new \ReflectionProperty($this->objectClass, $name);
             } catch (\ReflectionException $e) {
                 continue;
             }

@@ -144,7 +144,8 @@ trait WithOptionsTrait
             'owner' => $this,
             'schema' => $schema,
             'preOptions' => $this->getPreOptions(),
-            'containerNamespace' => $this->getOptionsContainerNamespace()
+            'containerNamespace' => $this->getOptionsContainerNamespace(),
+            'class' => static::class
         ]);
     }
 
