@@ -220,7 +220,7 @@ class Options
      * @throws UndefinedContainerException
      * @throws \Mrself\Container\Registry\NotFoundException
      */
-    protected function processInitAnnotation(PropertyMeta $meta, Init $annotation)
+    protected function processInitAnnotation(PropertyMeta $meta, array $annotation)
     {
         $this->schema['required'][] = $meta->name;
 
@@ -229,7 +229,7 @@ class Options
 
         $this->ensureClassUsesOptionableTrait($type);
 
-        if ($annotation->shared) {
+        if ($annotation['shared']) {
             $dependency = $this->initDependency($type);
         } else {
             $dependency = $type::make();
@@ -270,7 +270,7 @@ class Options
             $this->defineDefault($name);
         }
 
-        if ($this->defineParameter($name, @$annotation->parameter)) {
+        if ($this->defineParameter($name, @$annotation['parameter'])) {
             return;
         }
 
@@ -280,7 +280,7 @@ class Options
             $annotation
         );
 
-        if (@$annotation->dependency) {
+        if (@$annotation['dependency']) {
             $this->schema['asDependencies'][] = $name;
         }
     }
@@ -443,9 +443,9 @@ class Options
             return;
         }
 
-        $type = $this->defineDependencyType($name, $type, @$annotation->related);
+        $type = $this->defineDependencyType($name, $type, @$annotation['related']);
         $this->schema['allowedTypes'][$name] = [$type];
-        if (!$annotation->required) {
+        if (!$annotation['required']) {
             $this->schema['allowedTypes'][$name][] = 'null';
         }
     }
@@ -461,7 +461,7 @@ class Options
 
     protected function defineRequired(string $name, $annotation)
     {
-        if (!$annotation->required) {
+        if (!$annotation['required']) {
             return false;
         }
 

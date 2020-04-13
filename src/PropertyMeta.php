@@ -33,7 +33,7 @@ class PropertyMeta
     public function getAnnotation(string $class, $default = null)
     {
         $result = array_filter($this->annotations, function ($annotation) use ($class) {
-            return $annotation instanceof $class;
+            return $annotation['class'] === $class;
         });
         return reset($result) ?: $default;
     }

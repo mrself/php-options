@@ -4,7 +4,9 @@ namespace Mrself\Options;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Mrself\Container\Container;
 use Mrself\Container\Registry\ContainerRegistry;
+use Mrself\Util\ArrayUtil;
 use PhpDocReader\PhpDocReader;
 
 
@@ -76,14 +78,29 @@ class PropertiesMeta
 
     /**
      * @throws \PhpDocReader\AnnotationException
+     * @throws \Mrself\Container\Registry\NotFoundException
      */
     public function load()
     {
         $class = get_class($this->object);
-        if (static::hasCache($class)) {
-            $this->meta = self::getCached($class);
+        $container = ContainerRegistry::get('Mrself\Options', null);
+        if (!$container || !$container->get('cache', null)) {
+            if (static::hasCache($class)) {
+                $this->meta = self::getCached($class);
+            } else {
+                $this->runLoad($class);
+            }
+            return;
+        }
+
+        /** @var Memcached $memcached */
+        $memcached = $container->get('cache');
+        $cached = $memcached->get($class);
+        if ($cached) {
+            $this->meta = $cached;
         } else {
             $this->runLoad($class);
+            $memcached->set($class, $this->meta);
         }
     }
 
@@ -99,13 +116,23 @@ class PropertiesMeta
             } catch (\ReflectionException $e) {
                 continue;
             }
-            $annotations = $this->annotationReader->getPropertyAnnotations($reflection);
+            $annotations = $this->getAnnotations($reflection);
             $type = $this->docReader->getPropertyClass($reflection);
-            $options = compact('type', 'annotations','name', 'reflection');
+            $options = compact('type', 'annotations','name');
             $this->meta[$name] = PropertyMeta::make($options);
         }
 
         static::addCache($class, $this->meta);
+    }
+
+    private function getAnnotations(\ReflectionProperty $reflection)
+    {
+        $annotations = $this->annotationReader->getPropertyAnnotations($reflection);
+        return ArrayUtil::map($annotations, function ($annotationObj) {
+            $array = (array) $annotationObj;
+            $array['class'] = get_class($annotationObj);
+            return $array;
+        });
     }
 
     public function getByAnnotation(string $annotationClass): array
