@@ -83,24 +83,26 @@ class PropertiesMeta
     public function load()
     {
         $class = get_class($this->object);
+        $cacheId = 'mrself/options:' . $class;
+
         $container = ContainerRegistry::get('Mrself\Options', null);
         if (!$container || !$container->get('cache', null)) {
-            if (static::hasCache($class)) {
-                $this->meta = self::getCached($class);
+            if (static::hasCache($cacheId)) {
+                $this->meta = self::getCached($cacheId);
             } else {
-                $this->runLoad($class);
+                $this->runLoad($class, $cacheId);
             }
             return;
         }
 
         /** @var Memcached $memcached */
         $memcached = $container->get('cache');
-        $cached = $memcached->get($class);
+        $cached = $memcached->get($cacheId);
         if ($cached) {
             $this->meta = $cached;
         } else {
-            $this->runLoad($class);
-            $memcached->set($class, $this->meta);
+            $this->runLoad($class, $cacheId);
+            $memcached->set($cacheId, $this->meta);
         }
     }
 
@@ -108,7 +110,7 @@ class PropertiesMeta
      * @param string $class
      * @throws \PhpDocReader\AnnotationException
      */
-    private function runLoad(string $class)
+    private function runLoad(string $class, string $cacheId)
     {
         foreach ($this->properties as $name => $value) {
             try {
@@ -122,7 +124,7 @@ class PropertiesMeta
             $this->meta[$name] = PropertyMeta::make($options);
         }
 
-        static::addCache($class, $this->meta);
+        static::addCache($cacheId, $this->meta);
     }
 
     private function getAnnotations(\ReflectionProperty $reflection)
