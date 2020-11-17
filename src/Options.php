@@ -231,6 +231,16 @@ class Options
     {
         $this->schema['required'][] = $meta->name;
 
+        if (isset($this->preOptions[$meta->name])) {
+            $this->defineAllowedType(
+                $meta->name,
+                $meta->getType(),
+                $annotation
+            );
+
+            return;
+        }
+
         /** @var WithOptionsTrait|string $type */
         $type = $meta->getType();
 
