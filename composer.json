@@ -11,7 +11,7 @@
     }
   },
   "require": {
-    "symfony/options-resolver": "^4.2",
+    "symfony/options-resolver": "^4.4",
     "mrself/util": "^1.5.0",
     "doctrine/annotations": "^1.6",
     "php-di/phpdoc-reader": "^2.1",
