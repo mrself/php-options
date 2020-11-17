@@ -25,6 +25,26 @@ class InitAnnotationTest extends TestCase
         $this->assertInstanceOf(InitMock::class, $object->option1);
     }
 
+    public function testItUesProvidedOptionIfExistsInsteadOfMakingAServiceWithInit()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Init()
+             * @var InitMock
+             */
+            public $option1;
+        };
+
+        $initMock = InitMock::make();
+        $initMock->prop1 = 'value1';
+
+        $object->init(['option1' => $initMock]);
+        $this->assertInstanceOf(InitMock::class, $object->option1);
+        $this->assertEquals('value1', $object->option1->prop1);
+    }
+
     /**
      * @doesNotPerformAssertions
      */
