@@ -4,6 +4,7 @@ namespace Mrself\Options\Tests\Functional;
 
 use Mrself\Options\Annotation\Init;
 use Mrself\Options\Options;
+use Mrself\Options\Tests\Functional\Mocks\Init\ClassWithTwoInterfaces;
 use Mrself\Options\Tests\Functional\Mocks\Init\ExtendedInitMock;
 use Mrself\Options\Tests\Functional\Mocks\Init\InitMock;
 use Mrself\Options\WithOptionsTrait;
@@ -113,5 +114,21 @@ class InitAnnotationTest extends TestCase
         Options::addSharedDependency(InitMock::class, $dependency);
         $object->init();
         $this->assertEquals('value1', $object->option1->prop1);
+    }
+
+    public function testOptionableInterfaceIsRecognizedIfClassImplementsTwoInterfaces()
+    {
+        $object = new class {
+            use WithOptionsTrait;
+
+            /**
+             * @Init()
+             * @var ClassWithTwoInterfaces
+             */
+            public $option1;
+        };
+
+        $object->init();
+        $this->assertEquals(1, $object->option1->prop);
     }
 }
