@@ -130,24 +130,25 @@
         },
         {
             "name": "mrself/container",
-            "version": "v1.9.1",
+            "version": "v1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrself/php-container.git",
-                "reference": "491499fd711a39949f5dc3dd926f9d2731a3697c"
+                "reference": "66d4afeff03ff46fc96f9ea850246fde6b196275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrself/php-container/zipball/491499fd711a39949f5dc3dd926f9d2731a3697c",
-                "reference": "491499fd711a39949f5dc3dd926f9d2731a3697c",
+                "url": "https://api.github.com/repos/mrself/php-container/zipball/66d4afeff03ff46fc96f9ea850246fde6b196275",
+                "reference": "66d4afeff03ff46fc96f9ea850246fde6b196275",
                 "shasum": ""
             },
             "require": {
+                "mrself/options": "*",
                 "php": "^7.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7",
-                "symfony/var-dumper": "^4.2"
+                "symfony/var-dumper": "^4.4"
             },
             "type": "library",
             "autoload": {
@@ -156,7 +157,11 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2020-03-15T20:27:03+00:00"
+            "support": {
+                "issues": "https://github.com/mrself/php-container/issues",
+                "source": "https://github.com/mrself/php-container/tree/v1.13.0"
+            },
+            "time": "2020-11-22T20:39:42+00:00"
         },
         {
             "name": "mrself/util",
