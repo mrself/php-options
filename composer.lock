@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7ed2e261bee21ee9a0d0e6091546f14",
+    "content-hash": "248fc748d98d744e4388b0e1e66e5598",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -130,16 +130,16 @@
         },
         {
             "name": "mrself/container",
-            "version": "v1.13.0",
+            "version": "v1.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrself/php-container.git",
-                "reference": "66d4afeff03ff46fc96f9ea850246fde6b196275"
+                "reference": "1df51aa46a2ccb8a8f1b6fef2b139216ece273ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrself/php-container/zipball/66d4afeff03ff46fc96f9ea850246fde6b196275",
-                "reference": "66d4afeff03ff46fc96f9ea850246fde6b196275",
+                "url": "https://api.github.com/repos/mrself/php-container/zipball/1df51aa46a2ccb8a8f1b6fef2b139216ece273ed",
+                "reference": "1df51aa46a2ccb8a8f1b6fef2b139216ece273ed",
                 "shasum": ""
             },
             "require": {
@@ -159,9 +159,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/mrself/php-container/issues",
-                "source": "https://github.com/mrself/php-container/tree/v1.13.0"
+                "source": "https://github.com/mrself/php-container/tree/v1.13.2"
             },
-            "time": "2020-11-22T20:39:42+00:00"
+            "time": "2020-11-22T21:46:15+00:00"
         },
         {
             "name": "mrself/util",
