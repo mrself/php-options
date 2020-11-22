@@ -130,16 +130,16 @@
         },
         {
             "name": "mrself/container",
-            "version": "v1.12.1",
+            "version": "v1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrself/php-container.git",
-                "reference": "5f801fa9826999fff85a0ff72f6658e55145d324"
+                "reference": "66d4afeff03ff46fc96f9ea850246fde6b196275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrself/php-container/zipball/5f801fa9826999fff85a0ff72f6658e55145d324",
-                "reference": "5f801fa9826999fff85a0ff72f6658e55145d324",
+                "url": "https://api.github.com/repos/mrself/php-container/zipball/66d4afeff03ff46fc96f9ea850246fde6b196275",
+                "reference": "66d4afeff03ff46fc96f9ea850246fde6b196275",
                 "shasum": ""
             },
             "require": {
@@ -159,9 +159,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/mrself/php-container/issues",
-                "source": "https://github.com/mrself/php-container/tree/v1.12.1"
+                "source": "https://github.com/mrself/php-container/tree/v1.13.0"
             },
-            "time": "2020-11-22T17:30:18+00:00"
+            "time": "2020-11-22T20:39:42+00:00"
         },
         {
             "name": "mrself/util",
