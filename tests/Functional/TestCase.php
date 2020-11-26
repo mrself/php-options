@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Mrself\Container\Container;
 use Mrself\Container\Registry\ContainerRegistry;
+use Mrself\Options\Cache;
 use Mrself\Options\Options;
 use Mrself\Options\OptionsClass;
 use Mrself\Options\OptionsProvider;
@@ -23,5 +24,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
         AnnotationRegistry::registerLoader('class_exists');
         (new OptionsProvider())->register();
         Options::clearSharedDependencies();
+        Cache::reset();
     }
 }

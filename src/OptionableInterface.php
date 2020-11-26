@@ -4,5 +4,9 @@ namespace Mrself\Options;
 
 interface OptionableInterface
 {
-
+    /**
+     * @param array $options
+     * @return static
+     */
+    public static function make(array $options = []);
 }

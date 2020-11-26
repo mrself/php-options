@@ -389,6 +389,11 @@ class Options
      */
     public function getContainer()
     {
+//        $cachedContainer = Cache::getInstance()->silentGet('containers', $this->ownerClass);
+//        if ($cachedContainer) {
+//            return $cachedContainer;
+//        }
+
         $namespace = $this->getContainerNamespace();
         if (is_string($namespace)) {
             $namespace = explode('\\', $namespace);
@@ -402,6 +407,8 @@ class Options
         if ('' === $container) {
             throw new UndefinedContainerException($namespace, $class);
         }
+
+//        Cache::getInstance()->set('containers', $this->ownerClass, $container);
         return $container;
     }
 
